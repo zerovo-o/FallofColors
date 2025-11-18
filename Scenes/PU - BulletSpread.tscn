@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://d6tnj6iv8ubx"]
+
+[ext_resource type="Script" path="res://Scripts/powerup.gd" id="1_1bx68"]
+[ext_resource type="Texture2D" uid="uid://c5q05nsbhpuqh" path="res://Art/bulletFlash.png" id="2_5gdea"]
+[ext_resource type="Script" path="res://Scripts/upgrade.gd" id="3_3umxu"]
+
+[sub_resource type="Resource" id="Resource_euctu"]
+script = ExtResource("3_3umxu")
+icon = ExtResource("2_5gdea")
+type = 2
+upgrade_name = "Spread Shot"
+upgrade_des = "Shoots more bullet each jump"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ev43j"]
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sbhn8"]
+size = Vector2(5, 5)
+
+[node name="PU - BulletSpread" type="StaticBody2D"]
+collision_layer = 512
+script = ExtResource("1_1bx68")
+upG = SubResource("Resource_euctu")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 512
+collision_mask = 64
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_ev43j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sbhn8")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -20.0
+offset_top = 7.0
+offset_right = 20.0
+offset_bottom = 19.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

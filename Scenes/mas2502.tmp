@@ -1,0 +1,215 @@
+[gd_scene load_steps=13 format=3 uid="uid://bujr5cd3klafn"]
+
+[ext_resource type="Script" path="res://Scripts/Master.gd" id="1_4w4w7"]
+[ext_resource type="PackedScene" uid="uid://cfekd8x8i66fb" path="res://Scenes/map_decider.tscn" id="1_lpuwr"]
+[ext_resource type="PackedScene" uid="uid://d0ljptt7bdm8c" path="res://Scenes/map_spawner.tscn" id="3_ydkao"]
+[ext_resource type="PackedScene" uid="uid://bddcuuo43u1ei" path="res://Scenes/player.tscn" id="4_ffd0w"]
+[ext_resource type="Theme" uid="uid://pdvfkjovrdby" path="res://Scenes/maintheme.tres" id="5_ntukj"]
+[ext_resource type="Script" path="res://Scripts/MainUI.gd" id="5_qqy6r"]
+[ext_resource type="Script" path="res://Scripts/startgameUI.gd" id="7_3guq7"]
+[ext_resource type="Texture2D" uid="uid://dpnhokxealp4a" path="res://Art/bullets/Coin.png" id="7_tic6n"]
+[ext_resource type="Texture2D" uid="uid://7kxjqjr0kxeg" path="res://Art/title.png" id="9_k72x4"]
+[ext_resource type="Script" path="res://Scripts/enemyholderoptimizer.gd" id="10_a4k58"]
+[ext_resource type="Texture2D" uid="uid://b3qrkwyemkvca" path="res://Art/Blocks/OpeningHatch.png" id="11_kbrbr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ba7eb"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Master" type="Node" node_paths=PackedStringArray("mapdecider", "mapspawner", "player", "StartUI", "MainUI")]
+script = ExtResource("1_4w4w7")
+mapdecider = NodePath("MapDecider")
+mapspawner = NodePath("MapSpawner")
+player = NodePath("Player")
+StartUI = NodePath("StartGameUI")
+MainUI = NodePath("Player/CanvasLayer/MainUI")
+hurt_inv_time = null
+
+[node name="MapDecider" parent="." instance=ExtResource("1_lpuwr")]
+
+[node name="MapSpawner" parent="." instance=ExtResource("3_ydkao")]
+
+[node name="BulletHolder" type="Node2D" parent="."]
+
+[node name="Player" parent="." node_paths=PackedStringArray("bullet_holder") instance=ExtResource("4_ffd0w")]
+position = Vector2(104, -200)
+bullet_holder = NodePath("../BulletHolder")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Player"]
+
+[node name="MainUI" type="Control" parent="Player/CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 0
+offset_left = 250.0
+offset_top = 100.0
+offset_right = 290.0
+offset_bottom = 140.0
+script = ExtResource("5_qqy6r")
+
+[node name="LPanel" type="Panel" parent="Player/CanvasLayer/MainUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -670.0
+offset_top = -264.0
+offset_right = -170.0
+offset_bottom = 196.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_ntukj")
+
+[node name="BulletLabel" type="Label" parent="Player/CanvasLayer/MainUI/LPanel"]
+layout_mode = 0
+offset_left = 453.0
+offset_top = 217.0
+offset_right = 531.0
+offset_bottom = 242.0
+theme = ExtResource("5_ntukj")
+text = "
+"
+
+[node name="GemCount" type="Label" parent="Player/CanvasLayer/MainUI/LPanel"]
+layout_mode = 0
+offset_left = 466.0
+offset_top = 147.0
+offset_right = 506.0
+offset_bottom = 171.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Player/CanvasLayer/MainUI/LPanel/GemCount"]
+visible = false
+position = Vector2(-7, 17)
+texture = ExtResource("7_tic6n")
+hframes = 3
+
+[node name="Empty_rounds" type="VBoxContainer" parent="Player/CanvasLayer/MainUI/LPanel"]
+layout_mode = 0
+offset_left = 480.0
+offset_top = 250.0
+offset_right = 520.0
+offset_bottom = 382.0
+theme_override_constants/separation = 2
+
+[node name="Full_rounds" type="VBoxContainer" parent="Player/CanvasLayer/MainUI/LPanel"]
+z_index = 2
+layout_mode = 0
+offset_left = 480.0
+offset_top = 250.0
+offset_right = 520.0
+offset_bottom = 382.0
+theme_override_constants/separation = 2
+
+[node name="RPanel" type="Panel" parent="Player/CanvasLayer/MainUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 130.0
+offset_top = -263.0
+offset_right = 630.0
+offset_bottom = 197.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_ntukj")
+
+[node name="LifeLabel" type="Label" parent="Player/CanvasLayer/MainUI/RPanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 216.0
+offset_right = 45.0
+offset_bottom = 240.0
+
+[node name="empty_hearts" type="VBoxContainer" parent="Player/CanvasLayer/MainUI/RPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 250.0
+offset_right = 44.0
+offset_bottom = 290.0
+
+[node name="full_heart" type="VBoxContainer" parent="Player/CanvasLayer/MainUI/RPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 250.0
+offset_right = 44.0
+offset_bottom = 290.0
+
+[node name="GemBonusLabel" type="Label" parent="Player/CanvasLayer/MainUI"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = 12.0
+offset_right = 22.0
+offset_bottom = 24.0
+
+[node name="StartGameUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 303.0
+offset_top = -54.0
+offset_right = 343.0
+offset_bottom = -14.0
+theme = ExtResource("5_ntukj")
+script = ExtResource("7_3guq7")
+
+[node name="Panel" type="Panel" parent="StartGameUI"]
+layout_mode = 0
+offset_left = -688.0
+offset_top = -210.0
+offset_right = 273.0
+offset_bottom = 441.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ba7eb")
+
+[node name="MarginContainer" type="MarginContainer" parent="StartGameUI/Panel"]
+layout_mode = 0
+offset_left = 443.0
+offset_top = 212.0
+offset_right = 541.0
+offset_bottom = 272.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StartGameUI/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="StartGameUI/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../OptionsButton")
+focus_neighbor_bottom = NodePath("../OptionsButton")
+button_mask = 0
+text = "start"
+vertical_icon_alignment = 0
+
+[node name="OptionsButton" type="Button" parent="StartGameUI/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_neighbor_top = NodePath("../StartButton")
+focus_neighbor_bottom = NodePath("../StartButton")
+button_mask = 0
+text = "options"
+vertical_icon_alignment = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="StartGameUI/Panel"]
+position = Vector2(508, 350)
+texture = ExtResource("9_k72x4")
+
+[node name="BlackOut" type="Panel" parent="StartGameUI"]
+custom_minimum_size = Vector2(5000, 5000)
+layout_mode = 0
+offset_left = -1541.0
+offset_top = -421.0
+offset_right = 3459.0
+offset_bottom = 4579.0
+
+[node name="StartingCameraSpot" type="Node2D" parent="."]
+position = Vector2(104, -32)
+
+[node name="EnemyHolder" type="Node2D" parent="."]
+script = ExtResource("10_a4k58")
+
+[node name="OpeningHatch" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(112, -128)
+texture = ExtResource("11_kbrbr")
+
+[connection signal="focus_entered" from="StartGameUI/Panel/MarginContainer/VBoxContainer/StartButton" to="StartGameUI" method="_on_start_button_focus_entered"]
+[connection signal="pressed" from="StartGameUI/Panel/MarginContainer/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://ctriqh5ws7m1v"]
+
+[ext_resource type="Texture2D" uid="uid://dtk1wrmmrpe2k" path="res://Art/Blocks/FANcircle.png" id="1_alhrn"]
+[ext_resource type="Texture2D" uid="uid://cjanmot5bxrbd" path="res://Art/Blocks/FANblade.png" id="2_qtt7k"]
+
+[sub_resource type="Animation" id="Animation_bxeat"]
+resource_name = "spin"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("blade:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e812n"]
+_data = {
+"spin": SubResource("Animation_bxeat")
+}
+
+[node name="bigfan" type="Node2D"]
+z_index = -2
+
+[node name="circle" type="Sprite2D" parent="."]
+modulate = Color(0.188235, 0.2, 0.266667, 1)
+rotation = 6.28319
+texture = ExtResource("1_alhrn")
+
+[node name="blade" type="Sprite2D" parent="."]
+modulate = Color(0.189578, 0.200567, 0.266568, 1)
+texture = ExtResource("2_qtt7k")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_e812n")
+}
+autoplay = "spin"
+speed_scale = 0.1

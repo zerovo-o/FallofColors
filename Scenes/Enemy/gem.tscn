@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://1aw5qi3h6l8b"]
+
+[ext_resource type="Script" path="res://Scenes/gem.gd" id="1_mqy1f"]
+[ext_resource type="Texture2D" uid="uid://dpnae28nc0l3c" path="res://Art/Enemyies/Coin.png" id="2_xhuh2"]
+
+[sub_resource type="Animation" id="Animation_j1hvg"]
+resource_name = "coinspin"
+length = 0.3
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q3rl5"]
+_data = {
+"coinspin": SubResource("Animation_j1hvg")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_675af"]
+
+[node name="Gem" type="Node2D"]
+script = ExtResource("1_mqy1f")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_xhuh2")
+hframes = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_q3rl5")
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_675af")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

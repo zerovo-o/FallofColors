@@ -1,0 +1,70 @@
+[gd_scene load_steps=7 format=3 uid="uid://02yaeko4vkk4"]
+
+[ext_resource type="Script" path="res://Scripts/basic_bullet.gd" id="1_mivrc"]
+[ext_resource type="Texture2D" uid="uid://drt3fl8x3efu7" path="res://Art/bullets/basicbullet.png" id="2_n12yr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fxm3j"]
+size = Vector2(2, 8)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3r6wj"]
+particle_flag_disable_z = true
+direction = Vector3(1, 1, 0)
+spread = 180.0
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+scale_max = 2.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abe1n"]
+size = Vector2(4, 9)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_iwlah"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 90.0
+initial_velocity_min = 50.0
+initial_velocity_max = 75.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+
+[node name="BasicBullet" type="RigidBody2D"]
+position = Vector2(0, -2)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_mivrc")
+speed = 500
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 5)
+texture = ExtResource("2_n12yr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("RectangleShape2D_fxm3j")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_3r6wj")
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.72
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 33
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_abe1n")
+
+[node name="ExplosionParticle" type="GPUParticles2D" parent="."]
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_iwlah")
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.88
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_shape_entered" from="Area2D" to="." method="_on_area_2d_area_shape_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

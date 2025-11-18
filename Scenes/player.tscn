@@ -1,0 +1,307 @@
+[gd_scene load_steps=28 format=3 uid="uid://bddcuuo43u1ei"]
+
+[ext_resource type="Script" path="res://Scripts/playermover.gd" id="1_rylju"]
+[ext_resource type="Shader" path="res://Scenes/life_flash.gdshader" id="2_4n4ay"]
+[ext_resource type="Texture2D" uid="uid://ccndbl2dusgcd" path="res://Art/player.png" id="2_mcjur"]
+[ext_resource type="Script" path="res://Scripts/bullet_spawner.gd" id="3_tda30"]
+[ext_resource type="Script" path="res://Scripts/spriteshadercontroller.gd" id="4_c5a2r"]
+[ext_resource type="Script" path="res://Scripts/camera_shake.gd" id="4_frbf7"]
+[ext_resource type="Script" path="res://Scripts/Jump_moveSM.gd" id="5_yo8sr"]
+[ext_resource type="Script" path="res://Scripts/ComboTracker.gd" id="6_8atna"]
+[ext_resource type="Script" path="res://Scripts/damagehandler.gd" id="8_aqhwo"]
+[ext_resource type="Texture2D" uid="uid://bt4r6f8km732x" path="res://Art/bulletFlash-sheet.png" id="8_ger0w"]
+[ext_resource type="PackedScene" uid="uid://dqy0nwfslgm2n" path="res://Scenes/deathparticle.tscn" id="11_8qs1s"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o8r13"]
+shader = ExtResource("2_4n4ay")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dch14"]
+size = Vector2(4, 9)
+
+[sub_resource type="Animation" id="Animation_ucb32"]
+resource_name = "flash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uod1l"]
+_data = {
+"flash": SubResource("Animation_ucb32")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nkilp"]
+size = Vector2(6, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vy7wg"]
+size = Vector2(6, 11)
+
+[sub_resource type="Animation" id="Animation_h86aw"]
+resource_name = "bounce"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [12, 13, 14]
+}
+
+[sub_resource type="Animation" id="Animation_l4uve"]
+resource_name = "fall"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+
+[sub_resource type="Animation" id="Animation_02mpk"]
+resource_name = "idle"
+length = 0.3
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_eb7q6"]
+resource_name = "jump"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+
+[sub_resource type="Animation" id="Animation_noa8v"]
+resource_name = "run"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_y171k"]
+resource_name = "shoot"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [11]
+}
+
+[sub_resource type="Animation" id="Animation_wkrnq"]
+resource_name = "stop"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+
+[sub_resource type="Animation" id="Animation_orrp4"]
+resource_name = "wall_slide"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_np4ek"]
+_data = {
+"bounce": SubResource("Animation_h86aw"),
+"fall": SubResource("Animation_l4uve"),
+"idle": SubResource("Animation_02mpk"),
+"jump": SubResource("Animation_eb7q6"),
+"run": SubResource("Animation_noa8v"),
+"shoot": SubResource("Animation_y171k"),
+"stop": SubResource("Animation_wkrnq"),
+"wall_slide": SubResource("Animation_orrp4")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bgaef"]
+size = Vector2(50, 50)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("areas_to_turnoff_on_death")]
+collision_layer = 2
+collision_mask = 9
+floor_constant_speed = true
+floor_block_on_wall = false
+script = ExtResource("1_rylju")
+areas_to_turnoff_on_death = [NodePath("BounceArea2D"), NodePath("HurtArea2D"), NodePath("Area2D")]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_o8r13")
+texture = ExtResource("2_mcjur")
+hframes = 15
+frame = 12
+script = ExtResource("4_c5a2r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_dch14")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2(0, 45)
+drag_vertical_enabled = true
+drag_bottom_margin = 0.0
+script = ExtResource("4_frbf7")
+
+[node name="JumpAndMove" type="Node2D" parent="." node_paths=PackedStringArray("char")]
+script = ExtResource("5_yo8sr")
+jump_velocity = -210.0
+gravity = 750.0
+max_fall_speed = 450.0
+ground_acceleration = 400.0
+air_acceleration = 400.0
+ground_friction = 400
+air_friction = 400
+max_ground_speed = 75.0
+max_air_speed = 75.0
+max_jump_mod = 1.25
+air_jump_velocity = -151.0
+max_air_jump = 4
+char = NodePath("..")
+wall_slide_speed = 100.0
+wall_jump_velocity = Vector2(75, -50)
+
+[node name="stateDebug" type="Label" parent="JumpAndMove"]
+offset_left = -22.0
+offset_top = -88.0
+offset_right = 18.0
+offset_bottom = -76.0
+
+[node name="ComboTracker" type="Label" parent="JumpAndMove"]
+offset_top = -29.0
+offset_right = 40.0
+offset_bottom = -17.0
+text = "3"
+script = ExtResource("6_8atna")
+
+[node name="BulletSpawner" type="Node2D" parent="." node_paths=PackedStringArray("player", "bullet_flash")]
+script = ExtResource("3_tda30")
+player = NodePath("..")
+bullet_flash = NodePath("../bulletflash")
+
+[node name="bulletflash" type="Sprite2D" parent="."]
+position = Vector2(0, 9)
+texture = ExtResource("8_ger0w")
+hframes = 4
+frame = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="bulletflash"]
+libraries = {
+"": SubResource("AnimationLibrary_uod1l")
+}
+
+[node name="BounceArea2D" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
+position = Vector2(0, 7.5)
+shape = SubResource("RectangleShape2D_nkilp")
+
+[node name="HurtArea2D" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 8
+script = ExtResource("8_aqhwo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea2D"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_vy7wg")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_np4ek")
+}
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 256
+collision_mask = 640
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_bgaef")
+
+[node name="deathparticle" parent="." instance=ExtResource("11_8qs1s")]
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true
+
+[connection signal="area_entered" from="BounceArea2D" to="JumpAndMove" method="_on_bounce_area_2d_area_entered"]
+[connection signal="area_entered" from="HurtArea2D" to="HurtArea2D" method="_on_area_entered"]

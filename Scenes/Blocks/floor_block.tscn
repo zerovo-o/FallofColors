@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6b8a6b8maors"]
+
+[ext_resource type="Texture2D" uid="uid://fb3k5o4rjp7e" path="res://Art/Blocks/AllBlocks.png" id="1_m2bxb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4gtj3"]
+size = Vector2(16, 3)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6.5)
+shape = SubResource("RectangleShape2D_4gtj3")
+one_way_collision = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_m2bxb")
+hframes = 8

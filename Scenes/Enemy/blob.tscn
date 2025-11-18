@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cf012keruthpg"]
+
+[ext_resource type="Script" path="res://Scripts/Blob.gd" id="1_43vb5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trefv"]
+size = Vector2(16, 16)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_s5j5c"]
+size = Vector2(16, 16)
+
+[node name="Blob" type="CharacterBody2D"]
+collision_layer = 8
+motion_mode = 1
+script = ExtResource("1_43vb5")
+gravity = 50.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_trefv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("PlaceholderTexture2D_s5j5c")
+
+[node name="Rays" type="Node2D" parent="."]
+
+[node name="R" type="RayCast2D" parent="Rays"]
+target_position = Vector2(9, 0)
+
+[node name="L" type="RayCast2D" parent="Rays"]
+target_position = Vector2(-9, 0)
+
+[node name="D" type="RayCast2D" parent="Rays"]
+target_position = Vector2(0, 9)
+
+[node name="U" type="RayCast2D" parent="Rays"]
+target_position = Vector2(0, -9)

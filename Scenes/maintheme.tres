@@ -1,0 +1,54 @@
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://pdvfkjovrdby"]
+
+[ext_resource type="Texture2D" uid="uid://ctu1hf3t4ewi0" path="res://Art/panelbase.png" id="1_fgox2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b2onb"]
+bg_color = Color(0.768627, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x6pt7"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.180392, 0.180392, 0.180392, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wngyf"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h7h13"]
+texture = ExtResource("1_fgox2")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n1vcx"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nv7uq"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 0, 0, 1)
+
+[resource]
+Button/colors/font_color = Color(0.180005, 0.180005, 0.180005, 1)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/styles/focus = SubResource("StyleBoxFlat_b2onb")
+Button/styles/normal = SubResource("StyleBoxFlat_x6pt7")
+Button/styles/pressed = SubResource("StyleBoxFlat_wngyf")
+Label/font_sizes/font_size = 32
+Panel/styles/panel = SubResource("StyleBoxTexture_h7h13")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_n1vcx")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_nv7uq")

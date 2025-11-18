@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://mpev0os6rina"]
+
+[ext_resource type="Script" path="res://Scenes/Blocks/choose_random_sprite.gd" id="1_878u1"]
+[ext_resource type="Texture2D" uid="uid://cciyyf752ofve" path="res://Art/Blocks/metal-wall-block-sheet.png" id="1_voawj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0jup"]
+size = Vector2(16, 16)
+
+[node name="WallBlock" type="StaticBody2D"]
+collision_mask = 14
+script = ExtResource("1_878u1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_voawj")
+hframes = 11
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_t0jup")

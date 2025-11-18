@@ -1,0 +1,169 @@
+[gd_scene load_steps=22 format=3 uid="uid://dstbph0ebre4h"]
+
+[ext_resource type="Script" path="res://Scripts/BossMaster.gd" id="1_kbk51"]
+[ext_resource type="Script" path="res://Scripts/bossbodymover.gd" id="2_od7h6"]
+[ext_resource type="Texture2D" uid="uid://vc0evu2yd7yy" path="res://Art/Enemyies/BossHead.png" id="3_2wobt"]
+[ext_resource type="Shader" path="res://Scenes/life_flash.gdshader" id="3_wl2it"]
+[ext_resource type="Texture2D" uid="uid://dpisyvfebdlua" path="res://Art/Enemyies/BossBody.png" id="4_mbb53"]
+[ext_resource type="PackedScene" uid="uid://cc2bw6mmhabwl" path="res://Scenes/Enemy/bounce_area_2d.tscn" id="4_r5jld"]
+[ext_resource type="Script" path="res://Scripts/spriteshadercontroller.gd" id="5_lq1bx"]
+[ext_resource type="Texture2D" uid="uid://lgd53ekm653p" path="res://Art/Enemyies/BossLHand.png" id="5_vjaqk"]
+[ext_resource type="Script" path="res://Scripts/BossLife.gd" id="7_u4p7k"]
+[ext_resource type="Theme" uid="uid://pdvfkjovrdby" path="res://Scenes/maintheme.tres" id="8_7qo8c"]
+[ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="8_jkef4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_40hna"]
+shader = ExtResource("3_wl2it")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_00ib5"]
+size = Vector2(12, 14)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iq16k"]
+shader = ExtResource("3_wl2it")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_engpt"]
+size = Vector2(20, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_br480"]
+size = Vector2(22, 20)
+
+[sub_resource type="Curve2D" id="Curve2D_3okod"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7wlnm"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jp1wd"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ksblv"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0tcwk"]
+size = Vector2(16, 16)
+
+[node name="Boss1" type="Node2D"]
+script = ExtResource("1_kbk51")
+oscillation_speed = 5.0
+oscillation_apmplitude = 20.0
+attack_speed = 100.0
+return_speed = 120.0
+idle_duration2 = 3.0
+
+[node name="Body" type="CharacterBody2D" parent="."]
+position = Vector2(0, -10)
+collision_layer = 0
+script = ExtResource("2_od7h6")
+
+[node name="HeadSprite" type="Sprite2D" parent="Body"]
+material = SubResource("ShaderMaterial_40hna")
+position = Vector2(0, -24)
+texture = ExtResource("3_2wobt")
+script = ExtResource("5_lq1bx")
+
+[node name="BounceArea2D" parent="Body/HeadSprite" instance=ExtResource("4_r5jld")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/HeadSprite/BounceArea2D"]
+shape = SubResource("RectangleShape2D_00ib5")
+
+[node name="BodySprite" type="Sprite2D" parent="Body"]
+material = SubResource("ShaderMaterial_iq16k")
+position = Vector2(0, -6)
+texture = ExtResource("4_mbb53")
+script = ExtResource("5_lq1bx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_engpt")
+
+[node name="LeftArmShoulder" type="Node2D" parent="Body"]
+position = Vector2(-6, -11)
+
+[node name="RightArmShoulder" type="Node2D" parent="Body"]
+position = Vector2(6, -13)
+
+[node name="HurtArea2D" parent="Body" instance=ExtResource("8_jkef4")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/HurtArea2D"]
+shape = SubResource("RectangleShape2D_br480")
+
+[node name="LeftArmPath" type="Path2D" parent="."]
+position = Vector2(0, -10)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -10)
+
+[node name="RightArmPath" type="Path2D" parent="."]
+position = Vector2(0, -10)
+curve = SubResource("Curve2D_3okod")
+
+[node name="RightHand" type="CharacterBody2D" parent="."]
+position = Vector2(0, -10)
+collision_layer = 1024
+collision_mask = 70
+
+[node name="RightHandSprite" type="Sprite2D" parent="RightHand"]
+texture = ExtResource("5_vjaqk")
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightHand"]
+shape = SubResource("RectangleShape2D_7wlnm")
+
+[node name="HurtArea2D" parent="RightHand" instance=ExtResource("8_jkef4")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightHand/HurtArea2D"]
+shape = SubResource("RectangleShape2D_jp1wd")
+
+[node name="LeftHand" type="CharacterBody2D" parent="."]
+position = Vector2(0, -10)
+collision_layer = 1024
+collision_mask = 70
+
+[node name="LeftHandSprite" type="Sprite2D" parent="LeftHand"]
+texture = ExtResource("5_vjaqk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftHand"]
+shape = SubResource("RectangleShape2D_ksblv")
+
+[node name="HurtArea2D" parent="LeftHand" instance=ExtResource("8_jkef4")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftHand/HurtArea2D"]
+shape = SubResource("RectangleShape2D_0tcwk")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -18.0
+offset_top = 7.0
+offset_right = 22.0
+offset_bottom = 19.0
+text = "state"
+horizontal_alignment = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("7_u4p7k")
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer"]
+visible = false
+custom_minimum_size = Vector2(200, 5)
+offset_left = 150.0
+offset_top = 250.0
+offset_right = 350.0
+offset_bottom = 262.0
+theme = ExtResource("8_7qo8c")
+step = 1.0
+value = 75.0
+
+[node name="LifeLabel" type="Label" parent="CanvasLayer"]
+visible = false
+offset_left = 434.0
+offset_top = 68.0
+offset_right = 474.0
+offset_bottom = 80.0
+text = "Timmy"
+
+[connection signal="area_entered" from="Body/HeadSprite/BounceArea2D" to="." method="_on_bounce_area_2d_area_entered"]

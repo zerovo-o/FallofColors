@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfekd8x8i66fb"]
+
+[ext_resource type="Script" path="res://Scripts/MapDecider.gd" id="1_doi8a"]
+
+[node name="MapDecider" type="Node"]
+script = ExtResource("1_doi8a")

@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=3 uid="uid://b8biyklsrmob1"]
+
+[ext_resource type="Script" path="res://Scripts/bat.gd" id="1_p8eh6"]
+[ext_resource type="Shader" path="res://Scenes/life_flash.gdshader" id="2_vtbg5"]
+[ext_resource type="Texture2D" uid="uid://bxg3ay5vccb1v" path="res://Art/Enemyies/drone.png" id="2_xpxx8"]
+[ext_resource type="PackedScene" uid="uid://cc2bw6mmhabwl" path="res://Scenes/Enemy/bounce_area_2d.tscn" id="3_m3w34"]
+[ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="3_t7h3h"]
+[ext_resource type="Script" path="res://Scripts/spriteshadercontroller.gd" id="4_712e7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oavjf"]
+size = Vector2(12, 4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vpgn3"]
+shader = ExtResource("2_vtbg5")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_24dty"]
+size = Vector2(16, 4)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0cww7"]
+size = Vector2(14, 3)
+
+[sub_resource type="Animation" id="Animation_n2ka8"]
+resource_name = "drone"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_waq3i"]
+_data = {
+"drone": SubResource("Animation_n2ka8")
+}
+
+[node name="bat" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_p8eh6")
+life = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_oavjf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_vpgn3")
+texture = ExtResource("2_xpxx8")
+hframes = 6
+frame = 4
+script = ExtResource("4_712e7")
+
+[node name="BounceArea2D" parent="." instance=ExtResource("3_m3w34")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_24dty")
+
+[node name="HurtArea2D" parent="." instance=ExtResource("3_t7h3h")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea2D"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_0cww7")
+
+[node name="leftRay" type="RayCast2D" parent="."]
+target_position = Vector2(-10, 0)
+
+[node name="rightRay" type="RayCast2D" parent="."]
+target_position = Vector2(10, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_waq3i")
+}
+autoplay = "drone"
+
+[connection signal="area_entered" from="BounceArea2D" to="." method="_on_bounce_area_2d_area_entered"]

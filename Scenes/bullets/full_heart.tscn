@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dynv0dcmmqruf"]
+
+[ext_resource type="Texture2D" uid="uid://cll1ssxbhw1gm" path="res://Art/bullets/full_heart_round.png" id="1_ci5l7"]
+
+[node name="FullHeart" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_ci5l7")
+stretch_mode = 2

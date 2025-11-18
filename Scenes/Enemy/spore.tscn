@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3 uid="uid://dco45qsk1eqh7"]
+
+[ext_resource type="Script" path="res://Scripts/spore.gd" id="1_8mk51"]
+[ext_resource type="Texture2D" uid="uid://cwtcslxkt6rsj" path="res://Art/Enemyies/spore.png" id="2_opbq1"]
+[ext_resource type="PackedScene" uid="uid://cc2bw6mmhabwl" path="res://Scenes/Enemy/bounce_area_2d.tscn" id="3_oppfw"]
+[ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="4_i4cyv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_167fy"]
+radius = 2.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fam1a"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_70x3n"]
+radius = 4.0
+
+[node name="Spore" type="CharacterBody2D"]
+script = ExtResource("1_8mk51")
+speed = 30.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_167fy")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_opbq1")
+
+[node name="BounceArea2D" parent="." instance=ExtResource("3_oppfw")]
+collision_mask = 22
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
+position = Vector2(0, -1)
+shape = SubResource("CircleShape2D_fam1a")
+
+[node name="HurtArea2D" parent="." instance=ExtResource("4_i4cyv")]
+collision_mask = 66
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea2D"]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_70x3n")
+
+[connection signal="area_entered" from="BounceArea2D" to="." method="_on_bounce_area_2d_area_entered"]
+[connection signal="area_entered" from="HurtArea2D" to="." method="_on_hurt_area_2d_area_entered"]

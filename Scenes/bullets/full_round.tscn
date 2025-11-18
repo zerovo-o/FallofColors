@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://duxxdrbktd6pg"]
+
+[ext_resource type="Texture2D" uid="uid://ckp0aexvqxrod" path="res://Art/bullets/full_round_icon.png" id="1_meh30"]
+
+[node name="FullRound" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_meh30")
+stretch_mode = 2

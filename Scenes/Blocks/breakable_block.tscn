@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://8w4bld5x3rc4"]
+
+[ext_resource type="Script" path="res://Scripts/breakable_block.gd" id="1_4l07s"]
+[ext_resource type="Texture2D" uid="uid://cdmbrf7ellgqx" path="res://Art/Blocks/allbreakableblocks.png" id="2_wn3fo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3n5cp"]
+size = Vector2(16, 9)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b0gcn"]
+size = Vector2(16, 3)
+
+[node name="breakable_block" type="StaticBody2D"]
+collision_mask = 14
+script = ExtResource("1_4l07s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3.5)
+shape = SubResource("RectangleShape2D_3n5cp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_wn3fo")
+hframes = 6
+frame = 2
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -6.5)
+shape = SubResource("RectangleShape2D_b0gcn")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

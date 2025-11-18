@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://b67ms31n72rva"]
+
+[ext_resource type="Script" path="res://Scenes/Enemy/popEffect.gd" id="1_crlm0"]
+[ext_resource type="Texture2D" uid="uid://c074q6domxeaj" path="res://Art/Enemyies/deatheffect.png" id="2_3oiqs"]
+
+[sub_resource type="Animation" id="Animation_xm7cg"]
+resource_name = "pop"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_do4jy"]
+_data = {
+"pop": SubResource("Animation_xm7cg")
+}
+
+[node name="PopEffect" type="Node2D"]
+script = ExtResource("1_crlm0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_3oiqs")
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_do4jy")
+}
+
+[connection signal="visibility_changed" from="Sprite2D" to="." method="_on_sprite_2d_visibility_changed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

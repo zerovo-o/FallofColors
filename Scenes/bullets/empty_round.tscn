@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://ba0abk4o0nc1t"]
+
+[ext_resource type="Texture2D" uid="uid://cn7gh6kpbbxgo" path="res://Art/bullets/empty_round_icon.png" id="1_eon7y"]
+
+[node name="EmptyRound" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_eon7y")
+stretch_mode = 2

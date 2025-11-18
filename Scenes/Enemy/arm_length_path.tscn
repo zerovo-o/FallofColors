@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://uq8jpj8lx8is"]
+
+[ext_resource type="Texture2D" uid="uid://ctsxfdhfrgfke" path="res://Art/Enemyies/BossArm.png" id="1_7kfrl"]
+
+[node name="ArmLengthPath" type="PathFollow2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_7kfrl")

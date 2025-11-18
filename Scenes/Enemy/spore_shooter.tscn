@@ -1,0 +1,115 @@
+[gd_scene load_steps=15 format=3 uid="uid://cnnocp4xk7ee8"]
+
+[ext_resource type="Script" path="res://Scripts/SporeShooter.gd" id="1_d0h16"]
+[ext_resource type="Texture2D" uid="uid://dibyrir2qboij" path="res://Art/Enemyies/plant.png" id="2_2j13p"]
+[ext_resource type="Shader" path="res://Scenes/life_flash.gdshader" id="2_31bla"]
+[ext_resource type="PackedScene" uid="uid://cc2bw6mmhabwl" path="res://Scenes/Enemy/bounce_area_2d.tscn" id="2_nu527"]
+[ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="3_l4sdi"]
+[ext_resource type="Script" path="res://Scripts/spriteshadercontroller.gd" id="4_fxkio"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hq7b5"]
+size = Vector2(14, 9)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_duxga"]
+shader = ExtResource("2_31bla")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="Animation" id="Animation_c5tyk"]
+resource_name = "charging"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_aqosp"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_l4j5j"]
+resource_name = "launching"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_31wgt"]
+_data = {
+"charging": SubResource("Animation_c5tyk"),
+"idle": SubResource("Animation_aqosp"),
+"launching": SubResource("Animation_l4j5j")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4tbm0"]
+size = Vector2(14, 4.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7htam"]
+size = Vector2(12, 10)
+
+[node name="SporeShooter" type="CharacterBody2D"]
+script = ExtResource("1_d0h16")
+cooldown_time = 2.0
+detection_range = 15000.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_hq7b5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_duxga")
+position = Vector2(0, -8)
+texture = ExtResource("2_2j13p")
+hframes = 3
+script = ExtResource("4_fxkio")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_31wgt")
+}
+
+[node name="BounceArea2D" parent="." instance=ExtResource("2_nu527")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
+position = Vector2(0, -14.25)
+shape = SubResource("RectangleShape2D_4tbm0")
+
+[node name="HurtArea2D" parent="." instance=ExtResource("3_l4sdi")]
+position = Vector2(37, -21)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea2D"]
+position = Vector2(-37, 15)
+shape = SubResource("RectangleShape2D_7htam")
+
+[node name="SporeSpawnPoint" type="Node2D" parent="."]
+position = Vector2(0, -15)
+
+[connection signal="area_entered" from="BounceArea2D" to="." method="_on_bounce_area_2d_area_entered"]
+[connection signal="area_entered" from="HurtArea2D" to="." method="_on_hurt_area_2d_area_entered"]

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://bs1425367lcgm"]
+
+[ext_resource type="Script" path="res://Scripts/BossTrigger.gd" id="1_m0tma"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p1i4t"]
+size = Vector2(500, 50)
+
+[node name="BossTrigger" type="Node2D"]
+script = ExtResource("1_m0tma")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, -300)
+collision_layer = 0
+collision_mask = 18
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_p1i4t")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
