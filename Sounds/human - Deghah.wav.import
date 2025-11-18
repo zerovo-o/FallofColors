@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://whb3m40337ol"
+path="res://.godot/imported/human - Deghah.wav-d110c366c17bcdd464582726618e4d3e.sample"
+
+[deps]
+
+source_file="res://Sounds/human - Deghah.wav"
+dest_files=["res://.godot/imported/human - Deghah.wav-d110c366c17bcdd464582726618e4d3e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

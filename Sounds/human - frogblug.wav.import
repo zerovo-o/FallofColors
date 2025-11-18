@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bencjdal58ouo"
+path="res://.godot/imported/human - frogblug.wav-9eeda52fe1d3182c8dd45e67f1f355df.sample"
+
+[deps]
+
+source_file="res://Sounds/human - frogblug.wav"
+dest_files=["res://.godot/imported/human - frogblug.wav-9eeda52fe1d3182c8dd45e67f1f355df.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

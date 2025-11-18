@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dt7kybdm77p6a"
+path="res://.godot/imported/Johns Raps - Bigfoot Season.mp3-c181c4fc95a344e93f6d48ec81d01a91.mp3str"
+
+[deps]
+
+source_file="res://Sounds/Johns Raps - Bigfoot Season.mp3"
+dest_files=["res://.godot/imported/Johns Raps - Bigfoot Season.mp3-c181c4fc95a344e93f6d48ec81d01a91.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
