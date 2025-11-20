@@ -1,0 +1,138 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 1. 定义圆角剪切路径 (Apple Squircle) -->
+    <clipPath id="squircle-clip">
+      <rect x="0" y="0" width="256" height="256" rx="56" ry="56" />
+    </clipPath>
+
+    <!-- 2. 背景深井渐变 -->
+    <linearGradient id="grad-well" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a1a" />
+      <stop offset="30%" stop-color="#2d2d2d" />
+      <stop offset="50%" stop-color="#ff3b30" /> <!-- Red -->
+      <stop offset="75%" stop-color="#007aff" /> <!-- Blue -->
+      <stop offset="100%" stop-color="#ffcc00" /> <!-- Yellow -->
+    </linearGradient>
+
+    <!-- 3. 速度线图案 -->
+    <pattern id="pat-speed-lines" x="0" y="0" width="22" height="256" patternUnits="userSpaceOnUse">
+      <rect x="20" y="0" width="1" height="256" fill="white" fill-opacity="0.05" />
+    </pattern>
+
+    <!-- 4. 井壁透视 (Vignette) -->
+    <radialGradient id="grad-vignette" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="40%" stop-color="#000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0.8" />
+    </radialGradient>
+
+    <!-- 5. 玻璃高光 (Gloss) -->
+    <linearGradient id="grad-gloss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.2" />
+      <stop offset="50%" stop-color="#fff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- 6. 玩家拖尾渐变 -->
+    <linearGradient id="grad-trail" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0" />
+      <stop offset="100%" stop-color="#fff" stop-opacity="0.6" />
+    </linearGradient>
+
+    <!-- === 滤镜定义 (模拟 CSS Blur 和 Box-shadow) === -->
+    
+    <!-- 通用模糊 -->
+    <filter id="blur-sm">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
+    </filter>
+    
+    <filter id="blur-med">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+    </filter>
+    
+    <filter id="blur-trail">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+    </filter>
+
+    <!-- 红色发光 -->
+    <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#ff3b30" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 蓝色发光 -->
+    <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#007aff" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 黄色发光 -->
+    <filter id="glow-yellow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#ffcc00" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 玩家投影 -->
+    <filter id="drop-shadow-white">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="white" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- === 主体绘制 (应用剪切路径) === -->
+  <g clip-path="url(#squircle-clip)">
+    
+    <!-- 1. 背景 -->
+    <rect width="256" height="256" fill="url(#grad-well)" />
+    
+    <!-- 2. 速度线 (加一点模糊模拟运动) -->
+    <rect width="256" height="256" fill="url(#pat-speed-lines)" filter="url(#blur-sm)" />
+    
+    <!-- 3. 暗角 -->
+    <rect width="256" height="256" fill="url(#grad-vignette)" />
+
+    <!-- 4. 隧道分界线 -->
+    <rect x="0" y="90" width="256" height="2" fill="white" fill-opacity="0.5" filter="url(#blur-sm)" />
+
+    <!-- 5. 飞逝的色块/流光 -->
+    <!-- 白色 (Top Left) -->
+    <rect x="76" y="25" width="4" height="40" rx="2" fill="white" fill-opacity="0.2" filter="url(#blur-sm)" />
+    
+    <!-- 红色 (Mid Right) -->
+    <rect x="204" y="115" width="4" height="60" rx="2" fill="#ff3b30" filter="url(#glow-red)" opacity="0.8" />
+    
+    <!-- 蓝色 (Low Left) -->
+    <rect x="51" y="180" width="4" height="50" rx="2" fill="#007aff" filter="url(#glow-blue)" opacity="0.8" />
+    
+    <!-- 黄色 (Bottom Right) -->
+    <rect x="153" y="217" width="4" height="40" rx="2" fill="#ffcc00" filter="url(#glow-yellow)" opacity="0.8" />
+
+    <!-- 6. 玩家拖尾 -->
+    <!-- CSS: top 20%, height 30% -> y=51, h=76. Center x=128. Width 8. -->
+    <rect x="124" y="51" width="8" height="76" fill="url(#grad-trail)" filter="url(#blur-trail)" />
+
+    <!-- 7. 玩家 (子弹形状) -->
+    <!-- 居中: x=108, y=103 (基于 viewBox 24x30 -> 40x50px 尺寸的计算) -->
+    <g transform="translate(108, 103)" filter="url(#drop-shadow-white)">
+      <svg width="40" height="50" viewBox="0 0 24 30">
+        <path fill="#fff" d="M12 30 L 5 18 L 5 8 C 5 4 8 1 12 1 C 16 1 19 4 19 8 L 19 18 Z" />
+      </svg>
+    </g>
+
+    <!-- 8. 玻璃高光 -->
+    <rect width="256" height="256" fill="url(#grad-gloss)" pointer-events="none" />
+    
+  </g>
+</svg>
