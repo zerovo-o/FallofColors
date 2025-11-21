@@ -10,8 +10,8 @@
 |...............|
 |xx1xxxx2xxxx3xx|
 =
-|xxxxxxxTxxxxxxx|
-|xxxxxxxxxxx1xxxx
+|xxxxxxxTxxxxxxxx
+|xxxxxxxxxxxxxxxx
 |xxxxxxxxxxxxxxxx
 |xxxxxxxxxxxxxxxx
 |________________
@@ -28,7 +28,7 @@
 |xxxxxxxxxxxxxxx|
 |xxxxxxxxxxxxxxx|
 =
-|||||||||||||||||
+xx|||||||||||||||
 xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx
