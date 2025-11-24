@@ -1,7 +1,7 @@
 extends Node
 class_name Master
 
-# 这个是“总导演”。它把所有系统串起来，同时也变成了“关卡段流式生成”的调度器：
+# 这个是"总导演"。它把所有系统串起来，同时也变成了"关卡段流式生成"的调度器：
 # - 段的定义：一段 = 竖向长串 + 一行横向 + 锁锚点
 # - 建段：接近当前段底部时开始异步生成下一段（避免卡顿）
 # - 删段：玩家一进入新段顶部，立刻删除旧段（保持场上几乎只有当前段）
@@ -11,7 +11,11 @@ class_name Master
 @export var mapspawner : Map_Spawner
 @export var player : PlayerMasterAndMover
 @export var StartUI : Control 
-@export var MainUI: MainUI
+@onready var main_ui: MainUI = $Player/CanvasLayer/MainUI
+@onready var red_effect_manager = $RedEffectManager
+@onready var yellow_effect_manager = $YellowEffectManager
+@onready var rainbow_effect_manager = $RainbowEffectManager
+@onready var rainbow_full_effect_manager = $RainbowFullEffectManager
 
 @export var hurt_inv_time: float = 0.4
 var hurt_time_counter: float = 0.0
@@ -56,13 +60,13 @@ func get_gem_count() -> int:
 
 func set_gem_count(value : int) -> void:
 	_gem_count = clamp(value, 0, 9999)
-	MainUI.display_gem_count(get_gem_count())
+	main_ui.display_gem_count(get_gem_count())
 
 func get_gem(incount : int) -> void:
 	set_gem_count(get_gem_count() + incount)
 	
 func get_gem_bonus(bonus:int) -> void:
-	MainUI.display_gem_bonus(bonus)
+	main_ui.display_gem_bonus(bonus)
 	
 func set_gem_bonus(bonus_post_calculation : int) -> void:
 	set_gem_count(get_gem_count() + bonus_post_calculation)
@@ -73,9 +77,31 @@ func restart_game() -> void:
 	player.jumpmove.can_move = false
 	player.sprite.hide()
 	player.velocity = Vector2.ZERO
+	
+	# 重置所有调制效果
+	reset_all_modulate_effects()
+	
 	await get_tree().create_timer(2).timeout
 	get_tree().reload_current_scene()
-	
+
+# 重置所有调制效果
+func reset_all_modulate_effects():
+	# 重置红色调效果
+	if red_effect_manager != null:
+		red_effect_manager.reset_scene_colors()
+		
+	# 重置暖色调效果
+	if yellow_effect_manager != null:
+		yellow_effect_manager.reset_scene_colors()
+		
+	# 重置红橙黄蓝效果
+	if rainbow_effect_manager != null:
+		rainbow_effect_manager.reset_scene_colors()
+		
+	# 重置完整彩虹效果
+	if rainbow_full_effect_manager != null:
+		rainbow_full_effect_manager.reset_scene_colors()
+
 func finish_game() -> void:
 	SoundManager.stop_sound("boss_music")
 	HitStpo.start_hitstop(3)
@@ -91,7 +117,7 @@ func _ready() -> void:
 	player.calculate_bonus.connect(get_gem_bonus)
 	player.take_damage.connect(hurt_player)
 	mapdecider.spawning.connect(mapspawner.spawn_block)
-	MainUI.gem_bonus_count.connect(set_gem_bonus)
+	main_ui.gem_bonus_count.connect(set_gem_bonus)
 	player.camera_effect.set_camera.connect(set_camera)
 	player.dead.connect(restart_game)
 
@@ -100,11 +126,28 @@ func _ready() -> void:
 	mapdecider.set_vertical_origin_x(16)
 	_build_segment_async(true)
 
+func _select_segment_difficulty(seg_id: int) -> String:
+	#每段对应不同难度
+	# 0 段（第一段）用 map_first
+	if seg_id == 0:
+		return "first"
+	# 1 段（第二段）用 map_second
+	elif seg_id == 1:
+		return "second"
+	# 2 段（第三段）用 map_third
+	elif seg_id == 2:
+		return "third"
+	# 1 段（第二段）用 map_forth
+	else:
+		return "forth"
+
+
+
 # ===== 段流式（一段 = 竖向 + 横向 + 锁锚点） =====
 const TILE: int = 16
 const CHUNK_H: int = 5 * TILE
 const BUILD_TRIGGER_MARGIN: int = 2 * CHUNK_H  # 接近当前段底部这么远时预生成下一段
-const MAX_SEGMENTS: int = 5                   # 这里先设 5 段；想多就调这个数字
+const MAX_SEGMENTS: int = 4                   # 这里先设 4 段；想多就调这个数字
 
 # 管理在场段的顺序 & 信息
 var _loaded_order: Array[int] = []      # [旧段 id, 新段 id]
@@ -158,7 +201,10 @@ func spawn_one_segment_async(first: bool) -> void:
 
 	# 横向一行（关键点：起点用“当前竖向锚点 x”，不是固定 16）
 	mapdecider.off_set_x = mapdecider.vertical_origin_x
-	for i in 4:
+	for i in 2:
+		await mapdecider.make_specific_chunk_right_async(5, "mid")
+	await mapdecider.make_specific_chunk_right_async(6, "mid")
+	for i in 2:
 		await mapdecider.make_specific_chunk_right_async(5, "mid")
 	await mapdecider.make_specific_chunk_right_async(1, "right")
 
@@ -194,6 +240,11 @@ func _build_segment_async(first: bool) -> void:
 
 	# 段容器。注意我挂到了 mapspawner 节点下（世界层），避免把 UI 遮住。
 	var seg_id: int = _next_id
+
+	# ★ 根据段号切换难度（0 段 first，1 段 second...）
+	var diff := _select_segment_difficulty(seg_id)
+	mapdecider.set_difficulty(diff)
+
 	_next_id += 1
 	var seg := Node2D.new()
 	seg.name = "Segment_%d" % seg_id

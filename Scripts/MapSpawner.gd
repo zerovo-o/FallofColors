@@ -1,13 +1,13 @@
 extends Node2D
 class_name Map_Spawner
 
-# 这个脚本专门负责“把字符 → 实体”的那一步。
-# MapDecider 会发射 spawning 信号给我们，告诉我们“在某个像素点放一个字符代表的东西”，
+# 这个脚本专门负责"把字符 → 实体"的那一步。
+# MapDecider 会发射 spawning 信号给我们，告诉我们"在某个像素点放一个字符代表的东西"，
 # 我们这边就把对应的 PackedScene 实例化挂到场景里。
 # 关键改动（相对最初版）：
-# 1) 新增 set_spawn_roots(...)，让 Master 在“按段生成”时，把所有地形/敌人挂到该段容器下。
+# 1) 新增 set_spawn_roots(...)，让 Master 在"按段生成"时，把所有地形/敌人挂到该段容器下。
 #    这样整段删除时，不会漏节点。
-# 2) 砖墙去掉了“每块挂一个随机脚本”的方式，改为生成时随机 frame（更省资源）。
+# 2) 砖墙去掉了"每块挂一个随机脚本"的方式，改为生成时随机 frame（更省资源）。
 
 const block_wall : PackedScene = preload("res://Scenes/Blocks/wall_block.tscn")
 const block_floor : PackedScene = preload("res://Scenes/Blocks/floor_block.tscn")
@@ -31,15 +31,23 @@ const PUBounce : PackedScene = preload("res://Scenes/PU - LessBounce.tscn")
 const PUSBullets: PackedScene = preload("res://Scenes/PU - MoreBullets.tscn")
 const PULife : PackedScene = preload("res://Scenes/PU - MoreLife.tscn")
 const PUWall : PackedScene = preload("res://Scenes/PU - SlowerWallSlide.tscn")
+const red_gem : PackedScene = preload("res://Scenes/Enemy/red_gem.tscn")
+const yellow_gem : PackedScene = preload("res://Scenes/Enemy/yellow_gem.tscn")
+const blue_gem : PackedScene = preload("res://Scenes/Enemy/blue_gem.tscn")
+const rainbow_gem : PackedScene = preload("res://Scenes/Enemy/rainbow_gem.tscn")
 
 # 老的敌人统一挂在这个节点下（如果没覆盖的话）
 @onready var enemy_node : Node2D = $"../EnemyHolder"
+@onready var red_effect_manager = $"../RedEffectManager"
+@onready var yellow_effect_manager = $"../YellowEffectManager"
+@onready var rainbow_effect_manager = $"../RainbowEffectManager"
+@onready var rainbow_full_effect_manager = $"../RainbowFullEffectManager"
 
 # ========= 按段容器覆盖（关键） =========
 # Master 生成一段时，会建一个 Segment_X 节点：
 # - Tiles: 所有地形/PU/Boss 等静态东西
 # - Enemies: 所有敌人
-# 我们这里允许把“生成目标父节点”改成这两个，从而实现“整段删掉不留垃圾”。
+# 我们这里允许把"生成目标父节点"改成这两个，从而实现"整段删掉不留垃圾"。
 
 var _static_root: Node = null
 var _enemy_root_override: Node = null
@@ -56,7 +64,7 @@ func _static_parent() -> Node:
 func _enemy_parent() -> Node:
 	return _enemy_root_override if _enemy_root_override else enemy_node
 
-# ========= 旧开场用的“起始墙”工具（可不用） =========
+# ========= 旧开场用的"起始墙"工具（可不用） =========
 # 注意：它还是用 add_child 加到本节点下，不跟着段容器。
 # 如果未来还想用它，也建议改成 _static_parent().add_child(temp) 以便随段清理。
 func set_starting_row():
@@ -70,15 +78,17 @@ func set_starting_row():
 # ========= 字符 → 实体 =========
 func spawn_block(in_shape : String, in_pos : Vector2i ):
 	var tempshape
+	var node_type = ""
 	match in_shape:
 		"|":
-			# 砖墙：生成时直接随机一下 Sprite2D 的帧，替代“每块一个随机脚本”的做法（更省内存/初始化）
+			# 砖墙：生成时直接随机一下 Sprite2D 的帧，替代"每块一个随机脚本"的做法（更省内存/初始化）
 			tempshape = block_wall.instantiate()
 			tempshape.global_position = in_pos
 			var s := tempshape.get_node_or_null("Sprite2D") as Sprite2D
 			if s and s.hframes > 1:
 				s.frame = randi() % s.hframes
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		"x":
 			# 空，不生成
 			pass
@@ -86,32 +96,39 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = block_floor.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		".":
 			tempshape = block_break_floor.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		"^":
 			# 弹出刺：有伤害信号，直接连接到 Master 的 hurt_player（MapSpawner 的父节点就是 Master）
 			tempshape = block_spike_trap.instantiate()
 			tempshape.hurt_player.connect(get_parent().hurt_player)
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		"*":
 			tempshape = block_spike_static.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		"b":
 			tempshape = enemy_bat.instantiate()
 			tempshape.global_position = in_pos
 			_enemy_parent().add_child(tempshape)
+			node_type = "enemy"
 		"t":
 			tempshape = enemy_turtle.instantiate()
 			tempshape.global_position = in_pos
 			_enemy_parent().add_child(tempshape)
+			node_type = "enemy"
 		"B":
 			tempshape = boss.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "enemy"
 		"T":
 			tempshape = boss_trigger.instantiate()
 			tempshape.global_position = in_pos
@@ -120,14 +137,17 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = enemy_frog.instantiate()
 			tempshape.global_position = in_pos
 			_enemy_parent().add_child(tempshape)
+			node_type = "enemy"
 		"#": 
 			tempshape = big_fan.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "block"
 		"S":
 			tempshape = enemy_plant.instantiate()
 			tempshape.global_position = in_pos
 			_enemy_parent().add_child(tempshape)
+			node_type = "enemy"
 		"1":
 			tempshape = PUSpread.instantiate()
 			tempshape.global_position = in_pos
@@ -152,3 +172,35 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = PUWall.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+		"r":  # 红色宝石
+			tempshape = red_gem.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+		"y":  # 黄色宝石
+			tempshape = yellow_gem.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+		"l":  # 蓝色宝石
+			tempshape = blue_gem.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+		"p":  # 彩色宝石
+			tempshape = rainbow_gem.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+		
+	# 如果红色调效果已激活，更新节点颜色
+	if node_type != "" and red_effect_manager != null:
+		red_effect_manager.update_node_colors(node_type, tempshape)
+		
+	# 如果暖色调效果已激活，更新节点颜色
+	if node_type != "" and yellow_effect_manager != null:
+		yellow_effect_manager.update_node_colors(node_type, tempshape)
+		
+	# 如果红橙黄蓝效果已激活，更新节点颜色
+	if node_type != "" and rainbow_effect_manager != null:
+		rainbow_effect_manager.update_node_colors(node_type, tempshape)
+		
+	# 如果完整彩虹效果已激活，更新节点颜色
+	if node_type != "" and rainbow_full_effect_manager != null:
+		rainbow_full_effect_manager.update_node_colors(node_type, tempshape)

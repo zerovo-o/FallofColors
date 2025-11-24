@@ -7,7 +7,23 @@ class_name Map_Decider
 # 2) 横向拼块无缝：根据 strip_left/strip_right 计算实际“可见列数”，推进 off_set_x 不再固定 +CHUNK_W，彻底消除块与块之间的空列。
 # 3) 锁竖向锚点时，锁到“最后一个横向块的起始 x”，保证下一段竖向从正确的 x 开始（配合 Master 的 off_set_x = vertical_origin_x）。
 
-var file_path = "res://Data/easy_map.txt"
+var file_path_first = "res://Data/easy_map.txt"
+var file_path_second = "res://Data/map_second.txt"
+var file_path_third = "res://Data/map_third.txt"
+var file_path_forth = "res://Data/map_forth.txt"
+
+
+
+var data_first: Dictionary = {}
+var data_second: Dictionary = {}
+var data_third: Dictionary = {}
+var data_forth: Dictionary = {}
+
+
+# 当前正在使用的那套地图数据（原来的 data）
+var data: Dictionary = {}
+
+var current_difficulty: String = "first"
 
 class Grid:
 	var cells: Array
@@ -89,11 +105,37 @@ func parse_chunk_to_grid(chunk:Array) -> Array:
 
 signal spawning(value_of_cell, pos)
 
-var data : Dictionary
+
 
 func _ready():
 	randomize() # 保证每次运行随机不同；如果你希望“可复现”，可以改成独立 RNG + set_seed
-	data = read_and_split_file(file_path)
+	data_first = read_and_split_file(file_path_first)
+	data_second = read_and_split_file(file_path_second)
+	data_third = read_and_split_file(file_path_third)
+	data_forth = read_and_split_file(file_path_forth)
+
+	# 默认使用first
+	data = data_first
+	current_difficulty = "first"
+
+# 地图切换
+func set_difficulty(diff: String) -> void:
+	current_difficulty = diff
+	match diff:
+		"first":
+			data = data_first
+		"second":
+			data = data_second
+		"third":
+			data = data_third
+		"forth":
+			data = data_forth
+
+		_:
+			data = data_first
+
+
+
 
 # ===== 全局尺寸/偏移 =====
 var off_set_y : int = 0
@@ -296,7 +338,7 @@ func make_one_chunk_async() -> void:
 	for k in data.keys():
 		if k.is_valid_int():
 			var n := int(k)
-			if n >= 5 and n != 5:
+			if n >= 6 and n != 6:
 				candidates.append(k)
 	var chunk: Array = []
 	if not candidates.is_empty():
