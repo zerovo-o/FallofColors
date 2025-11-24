@@ -58,4 +58,3 @@ func return_gem(obj):
 	obj.hide()
 	gem_pool.append(obj)
 		
-

@@ -8,13 +8,16 @@ var is_active = false
 @onready var anim : AnimationPlayer = $AnimationPlayer
 
 func _on_area_2d_area_entered(area):
-		player = area.get_parent()
-		is_active = true
-		anim.play("coinspin")
+	if area != null:
+		var area_parent = area.get_parent()
+		if area_parent != null:
+			player = area_parent
+			is_active = true
+			if anim != null:
+				anim.play("coinspin")
 
-		
 func _physics_process(delta):
-	if is_active and player:
+	if is_active and player != null:
 		var dir = player.global_position - global_position
 		var dis = dir.length()
 		
