@@ -1,5 +1,5 @@
 extends Node2D
-class_name JumpAndMove
+class_name JumpAndMove2
 
 
 enum State {IDLE, RUNNING, JUMPING, AIR_JUMPING, FALLING, WALL_SLIDING, BOUNCING, DEAD}	
@@ -13,8 +13,8 @@ signal firingbullet
 signal ammo_count_changing(current_ammo_count, maxammo)
 
 @export var jump_velocity = -300.0
-@export var gravity = 800.0
-@export var max_fall_speed = 500.0
+@export var gravity = 100.0
+@export var max_fall_speed = 100.0
 @export var coyote_time = 0.15  # Time in seconds
 @export var jump_cut_height = 0.5  # Percentage of jump height to keep when cut
 @export var ground_acceleration = 300.0
@@ -88,6 +88,10 @@ func _physics_process(delta):
 	var input_vector = Vector2.ZERO
 	
 	state_debug_label.text = State.find_key(current_state)
+
+	# 禁用此标签的可见性（不在人物头顶显示状态）
+	state_debug_label.visible = false
+
 	#state_debug_label.text = str(coyote_timer)
 	input_vector.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	#this is for locking the controls after a wall jump or bounce
@@ -376,7 +380,7 @@ func _on_bounce_area_2d_area_entered(area):
 #
 #
 #extends Node2D
-#class_name JumpAndMove
+#class_name JumpAndMove2
 #
 #signal firingbullet
 #signal ammo_count_changing(current_ammo_count, maxammo)

@@ -137,9 +137,12 @@ func _select_segment_difficulty(seg_id: int) -> String:
 	# 2 段（第三段）用 map_third
 	elif seg_id == 2:
 		return "third"
-	# 1 段（第二段）用 map_forth
-	else:
+	# 3 段（第四段）用 map_forth
+	elif seg_id == 3:
 		return "forth"
+	# 4 段（第五段）用 map_fifth
+	else:
+		return "fifth"
 
 
 
@@ -147,7 +150,7 @@ func _select_segment_difficulty(seg_id: int) -> String:
 const TILE: int = 16
 const CHUNK_H: int = 5 * TILE
 const BUILD_TRIGGER_MARGIN: int = 2 * CHUNK_H  # 接近当前段底部这么远时预生成下一段
-const MAX_SEGMENTS: int = 4                   # 这里先设 4 段；想多就调这个数字
+const MAX_SEGMENTS: int = 5                  # 这里先设 5 段；想多就调这个数字
 
 # 管理在场段的顺序 & 信息
 var _loaded_order: Array[int] = []      # [旧段 id, 新段 id]
@@ -199,18 +202,21 @@ func spawn_one_segment_async(first: bool) -> void:
 	mapdecider.off_set_y += CHUNK_H
 	await mapdecider.make_specific_chunk_async(2)
 
-	# 横向一行（关键点：起点用“当前竖向锚点 x”，不是固定 16）
 	mapdecider.off_set_x = mapdecider.vertical_origin_x
+	await mapdecider.make_specific_chunk_right_stack3_async([2,2,11], "mid")
+	
+	await mapdecider.make_specific_chunk_right_stack3_async([5,6,8], "mid")
+	await mapdecider.make_specific_chunk_right_stack3_async([5,6,7], "mid")
 	for i in 2:
-		await mapdecider.make_specific_chunk_right_async(5, "mid")
-	await mapdecider.make_specific_chunk_right_async(6, "mid")
-	for i in 2:
-		await mapdecider.make_specific_chunk_right_async(5, "mid")
-	await mapdecider.make_specific_chunk_right_async(1, "right")
+		await mapdecider.make_specific_chunk_right_stack3_async([5,6,8], "mid")
+	await mapdecider.make_specific_chunk_right_stack3_async([5,10,9], "mid")
 
-	# 横向收尾后，锁竖向锚点到“最后一个横向块的起点”，
-	# 下一段的竖向就会从横向末端正下方继续落
+# 横向收尾：锁锚点
 	mapdecider.lock_vertical_to_last_right_chunk()
+
+# 关键新增：下一段从三层底部开始（3 层 → 额外下推 2 * CHUNK_H）
+	mapdecider.off_set_y += 2 * CHUNK_H
+
 
 # 粗略计算一段的 y 范围，方便触发预生成/删除
 func _compute_segment_bounds(root: Node2D) -> Vector2:

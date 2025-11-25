@@ -11,6 +11,8 @@ var file_path_first = "res://Data/easy_map.txt"
 var file_path_second = "res://Data/map_second.txt"
 var file_path_third = "res://Data/map_third.txt"
 var file_path_forth = "res://Data/map_forth.txt"
+var file_path_fifth = "res://Data/map_fifth.txt"
+
 
 
 
@@ -18,6 +20,7 @@ var data_first: Dictionary = {}
 var data_second: Dictionary = {}
 var data_third: Dictionary = {}
 var data_forth: Dictionary = {}
+var data_fifth: Dictionary = {}
 
 
 # 当前正在使用的那套地图数据（原来的 data）
@@ -113,6 +116,7 @@ func _ready():
 	data_second = read_and_split_file(file_path_second)
 	data_third = read_and_split_file(file_path_third)
 	data_forth = read_and_split_file(file_path_forth)
+	data_fifth = read_and_split_file(file_path_fifth)
 
 	# 默认使用first
 	data = data_first
@@ -130,6 +134,8 @@ func set_difficulty(diff: String) -> void:
 			data = data_third
 		"forth":
 			data = data_forth
+		"fifth":
+			data = data_fifth
 
 		_:
 			data = data_first
@@ -338,7 +344,7 @@ func make_one_chunk_async() -> void:
 	for k in data.keys():
 		if k.is_valid_int():
 			var n := int(k)
-			if n >= 6 and n != 6:
+			if n >=11 and n !=11:
 				candidates.append(k)
 	var chunk: Array = []
 	if not candidates.is_empty():
@@ -352,16 +358,49 @@ func make_one_chunk_async() -> void:
 			chunk = fallback
 	await _emit_chunk_async(chunk, vertical_origin_x, off_set_y)
 
+
+
+
 func make_specific_chunk_right_async(in_number: int, side: String="mid") -> void:
-	var strip_left: bool = (side != "left")
-	var strip_right: bool = (side != "right")
+	var strip_left: bool = false
+	var strip_right: bool = false
+
 	var chunk = get_specific_chunk(data, str(in_number))
 
 	var min_col: int = 0  if strip_left  else -1
 	var max_col: int = 14 if strip_right else 15
 	var visible_cols: int = max_col - min_col + 1
-	var origin_x_for_emit: int = off_set_x - (min_col * TILE)
+	var origin_x_for_emit: int = off_set_x # 关键：统一用 off_set_x，避免+TILE 偏移
+
 
 	_last_right_chunk_start_x = off_set_x
 	await _emit_chunk_async(chunk, origin_x_for_emit, off_set_y, strip_left, strip_right)
+	off_set_x += visible_cols * TILE
+
+
+
+#15*17
+func make_specific_chunk_right_stack3_async(keys: Array, side: String = "mid") -> void:
+	if keys.is_empty():
+		return
+	var strip_right: bool = false
+	var strip_left: bool = false
+
+
+
+
+
+	var min_col := 0  if strip_left  else -1
+	var max_col := 14 if strip_right else 15
+	var visible_cols := max_col - min_col + 1
+	var origin_x_for_emit: int = off_set_x # 关键：统一用 off_set_x，避免+TILE 偏移
+
+	_last_right_chunk_start_x = off_set_x
+
+	for j in range(3):
+		var k = keys[min(j, keys.size() - 1)]
+		var chunk = get_specific_chunk(data, str(k))
+		if chunk != null:
+			await _emit_chunk_async(chunk, origin_x_for_emit, off_set_y + j * CHUNK_H, strip_left, strip_right)
+
 	off_set_x += visible_cols * TILE
