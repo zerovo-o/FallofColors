@@ -12,10 +12,11 @@ class_name Master
 @export var player : PlayerMasterAndMover
 @export var StartUI : Control 
 @onready var main_ui: MainUI = $Player/CanvasLayer/MainUI
-@onready var red_effect_manager = $RedEffectManager
-@onready var yellow_effect_manager = $YellowEffectManager
-@onready var rainbow_effect_manager = $RainbowEffectManager
-@onready var rainbow_full_effect_manager = $RainbowFullEffectManager
+@onready var red_effect_manager = $"../Scripts/colorGem/RedEffectManager"
+@onready var yellow_effect_manager = $"../Scripts/colorGem/YellowEffectManager"
+@onready var blue_effect_manager = $"../Scripts/colorGem/BlueEffectManager"
+@onready var rainbow_full_effect_manager = $"../Scripts/colorGem/RainbowFullEffectManager"
+@onready var green_effect_manager = $"../Scripts/colorGem/GreenEffectManager"
 
 @export var hurt_inv_time: float = 0.4
 var hurt_time_counter: float = 0.0
@@ -94,13 +95,17 @@ func reset_all_modulate_effects():
 	if yellow_effect_manager != null:
 		yellow_effect_manager.reset_scene_colors()
 		
-	# 重置红橙黄蓝效果
-	if rainbow_effect_manager != null:
-		rainbow_effect_manager.reset_scene_colors()
+	# 重置蓝色调效果
+	if blue_effect_manager != null:
+		blue_effect_manager.reset_scene_colors()
 		
 	# 重置完整彩虹效果
 	if rainbow_full_effect_manager != null:
 		rainbow_full_effect_manager.reset_scene_colors()
+		
+	# 重置绿色调效果
+	if green_effect_manager != null:
+		green_effect_manager.reset_scene_colors()
 
 func finish_game() -> void:
 	SoundManager.stop_sound("boss_music")

@@ -31,17 +31,19 @@ const PUBounce : PackedScene = preload("res://Scenes/PU - LessBounce.tscn")
 const PUSBullets: PackedScene = preload("res://Scenes/PU - MoreBullets.tscn")
 const PULife : PackedScene = preload("res://Scenes/PU - MoreLife.tscn")
 const PUWall : PackedScene = preload("res://Scenes/PU - SlowerWallSlide.tscn")
-const red_gem : PackedScene = preload("res://Scenes/Enemy/red_gem.tscn")
-const yellow_gem : PackedScene = preload("res://Scenes/Enemy/yellow_gem.tscn")
-const blue_gem : PackedScene = preload("res://Scenes/Enemy/blue_gem.tscn")
-const rainbow_gem : PackedScene = preload("res://Scenes/Enemy/rainbow_gem.tscn")
+const red_gem : PackedScene = preload("res://Scenes/colorGem/red_gem.tscn")
+const yellow_gem : PackedScene = preload("res://Scenes/colorGem/yellow_gem.tscn")
+const blue_gem : PackedScene = preload("res://Scenes/colorGem/blue_gem.tscn")
+const rainbow_gem : PackedScene = preload("res://Scenes/colorGem/rainbow_gem.tscn")
+const green_gem : PackedScene = preload("res://Scenes/colorGem/green_gem.tscn")
 
 # 老的敌人统一挂在这个节点下（如果没覆盖的话）
 @onready var enemy_node : Node2D = $"../EnemyHolder"
-@onready var red_effect_manager = $"../RedEffectManager"
-@onready var yellow_effect_manager = $"../YellowEffectManager"
-@onready var rainbow_effect_manager = $"../RainbowEffectManager"
-@onready var rainbow_full_effect_manager = $"../RainbowFullEffectManager"
+@onready var red_effect_manager = $"../Scripts/colorGem/RedEffectManager"
+@onready var yellow_effect_manager = $"../Scripts/colorGem/YellowEffectManager"
+@onready var blue_effect_manager = $"../Scripts/colorGem/BlueEffectManager"
+@onready var rainbow_full_effect_manager = $"../Scripts/colorGem/RainbowFullEffectManager"
+@onready var green_effect_manager = $"../Scripts/colorGem/GreenEffectManager"
 
 # ========= 按段容器覆盖（关键） =========
 # Master 生成一段时，会建一个 Segment_X 节点：
@@ -188,6 +190,11 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = rainbow_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+		"g":  # 绿色宝石
+			tempshape = green_gem.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "gem"
 		
 	# 如果红色调效果已激活，更新节点颜色
 	if node_type != "" and red_effect_manager != null:
@@ -197,10 +204,14 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 	if node_type != "" and yellow_effect_manager != null:
 		yellow_effect_manager.update_node_colors(node_type, tempshape)
 		
-	# 如果红橙黄蓝效果已激活，更新节点颜色
-	if node_type != "" and rainbow_effect_manager != null:
-		rainbow_effect_manager.update_node_colors(node_type, tempshape)
+	# 如果蓝色调效果已激活，更新节点颜色
+	if node_type != "" and blue_effect_manager != null:
+		blue_effect_manager.update_node_colors(node_type, tempshape)
 		
 	# 如果完整彩虹效果已激活，更新节点颜色
 	if node_type != "" and rainbow_full_effect_manager != null:
 		rainbow_full_effect_manager.update_node_colors(node_type, tempshape)
+		
+	# 如果绿色调效果已激活，更新节点颜色
+	if node_type != "" and green_effect_manager != null:
+		green_effect_manager.update_node_colors(node_type, tempshape)
