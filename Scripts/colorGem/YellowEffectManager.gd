@@ -98,18 +98,38 @@ func update_node_colors(node_type: String, parent_node: Node):
 func _update_children_color(parent: Node, color: Color):
 	for child in parent.get_children():
 		# 跳过角色节点和特定方块节点
-		if child.name == "Player" or child.name == "Spike" or child.name == "Spike_Block" :
-			continue
+		   var skip_names = [
+			   "player", "spike", "spike_block",
+			   "blockmountain", "block_mountain",
+			   "blocksand", "block_sand",
+			   "blocksand2", "block_sand2",
+			   "blocktree1", "block_tree1",
+			   "blocktree2", "block_tree2",
+			   "blocktree3", "block_tree3",
+			   "lavawall", "lava_wall",
+			   "leafwall", "leaf_wall",
+			   "leafwall2", "leaf_wall2",
+			   "leafwall3", "leaf_wall3",
+			   "leafwall4", "leaf_wall4",
+			   "sandwall", "sand_wall",
+			   "sandwall2", "sand_wall2",
+			   "seawall", "sea_wall",
+			   "seawall2", "sea_wall2"
+		   ]
+		   if skip_names.has(child.name.to_lower()):
+			   continue
 			
-		# 跳过带有"gem_ignore_modulate"组标记的节点
-		if child.is_in_group("gem_ignore_modulate"):
-			continue
+		   # 跳过带有"gem_ignore_modulate"组标记的节点
+		   if child.is_in_group("gem_ignore_modulate"):
+			   continue
 			
-		if child is Sprite2D:
-			# 检查是否是紫色方块或平台，如果是则跳过
-			if child.name == "PurpleBlock" or child.name == "PurplePlatform":
-				continue
-				
-			child.modulate = color
+		   if child is Sprite2D:
+			   # 跳过指定方块Sprite2D节点
+			   if skip_names.has(child.name.to_lower()):
+				   continue
+			   # 检查是否是紫色方块或平台，如果是则跳过
+			   if child.name == "PurpleBlock" or child.name == "PurplePlatform":
+				   continue
+			   child.modulate = color
 		elif child.get_child_count() > 0:
 			_update_children_color(child, color)
