@@ -10,6 +10,30 @@ class_name Map_Spawner
 # 2) 砖墙去掉了"每块挂一个随机脚本"的方式，改为生成时随机 frame（更省资源）。
 
 const block_wall : PackedScene = preload("res://Scenes/Blocks/wall_block.tscn")
+const lava_wall : PackedScene = preload("res://Scenes/Blocks/lava_wall.tscn")
+const sand_wall : PackedScene = preload("res://Scenes/Blocks/sand_wall.tscn")
+const sand_wall2 : PackedScene = preload("res://Scenes/Blocks/sand_wall2.tscn")
+const leaf_wall : PackedScene = preload("res://Scenes/Blocks/leaf_wall.tscn")
+const leaf_wall2 : PackedScene = preload("res://Scenes/Blocks/leaf_wall2.tscn")
+const leaf_wall3 : PackedScene = preload("res://Scenes/Blocks/leaf_wall3.tscn")
+const leaf_wall4 : PackedScene = preload("res://Scenes/Blocks/leaf_wall4.tscn")
+const sea_wall : PackedScene = preload("res://Scenes/Blocks/sea_wall.tscn")
+const sea_wall2 : PackedScene = preload("res://Scenes/Blocks/sea_wall2.tscn")
+const block_mountain : PackedScene = preload("res://Scenes/Blocks/block_mountain.tscn")
+const block_sand : PackedScene = preload("res://Scenes/Blocks/block_sand1.tscn")
+const block_sand2 : PackedScene = preload("res://Scenes/Blocks/block_sand2.tscn")
+const block_tree1 : PackedScene = preload("res://Scenes/Blocks/block_tree1.tscn")
+const block_tree2 : PackedScene = preload("res://Scenes/Blocks/block_tree2.tscn")
+const block_tree3 : PackedScene = preload("res://Scenes/Blocks/block_tree3.tscn")
+const block_sand3 : PackedScene = preload("res://Scenes/Blocks/block_sand3.tscn")
+const block_sea1 : PackedScene = preload("res://Scenes/Blocks/block_sea1.tscn")
+const block_sea2 : PackedScene = preload("res://Scenes/Blocks/block_sea2.tscn")
+const block_lava1 : PackedScene = preload("res://Scenes/Blocks/block_lava1.tscn")
+const block_lava2 : PackedScene = preload("res://Scenes/Blocks/block_lava2.tscn")
+const block_lava3 : PackedScene = preload("res://Scenes/Blocks/block_lava3.tscn")
+const block_wood1 : PackedScene = preload("res://Scenes/Blocks/block_wood1.tscn")
+const block_wood2 : PackedScene = preload("res://Scenes/Blocks/block_wood2.tscn")
+
 const block_floor : PackedScene = preload("res://Scenes/Blocks/floor_block.tscn")
 const block_break_floor : PackedScene = preload("res://Scenes/Blocks/breakable_block.tscn")
 const block_spike_trap : PackedScene = preload("res://Scenes/Enemy/spike.tscn")
@@ -36,6 +60,11 @@ const yellow_gem : PackedScene = preload("res://Scenes/colorGem/yellow_gem.tscn"
 const blue_gem : PackedScene = preload("res://Scenes/colorGem/blue_gem.tscn")
 const rainbow_gem : PackedScene = preload("res://Scenes/colorGem/rainbow_gem.tscn")
 const green_gem : PackedScene = preload("res://Scenes/colorGem/green_gem.tscn")
+
+
+#狗儿
+const enemy_dog : PackedScene = preload("res://Scenes/Enemy/dog.tscn")
+
 
 # 老的敌人统一挂在这个节点下（如果没覆盖的话）
 @onready var enemy_node : Node2D = $"../EnemyHolder"
@@ -82,6 +111,7 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 	var tempshape
 	var node_type = ""
 	match in_shape:
+		
 		"|":
 			# 砖墙：生成时直接随机一下 Sprite2D 的帧，替代"每块一个随机脚本"的做法（更省内存/初始化）
 			tempshape = block_wall.instantiate()
@@ -178,24 +208,178 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = red_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "gem"
 		"y":  # 黄色宝石
 			tempshape = yellow_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "gem"
 		"l":  # 蓝色宝石
 			tempshape = blue_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "gem"
 		"p":  # 彩色宝石
 			tempshape = rainbow_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			node_type = "gem"
 		"g":  # 绿色宝石
 			tempshape = green_gem.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
 			node_type = "gem"
-		
+		"O":
+			# 熔岩墙体方块（静态）
+			tempshape = lava_wall.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"z":
+			# 沙墙体方块（静态）
+			tempshape = sand_wall.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"Z":
+			# 沙墙体方块2（静态）
+			tempshape = sand_wall2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"c":
+			# 叶墙体方块1（静态）
+			tempshape = leaf_wall.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"C":
+			# 叶墙体方块2（静态）
+			tempshape = leaf_wall2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"v":
+			# 叶墙体方块3（静态）
+			tempshape = leaf_wall3.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"V":
+			# 叶墙体方块4（静态）
+			tempshape = leaf_wall4.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"n":
+			# 海墙体方块1（静态）
+			tempshape = sea_wall.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"N":
+			# 海墙体方块2（静态）
+			tempshape = sea_wall2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"M":
+			# 山体装饰（不带碰撞）
+			tempshape = block_mountain.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "decor"
+		"k":
+			# 沙子装饰 1（带碰撞）
+			tempshape = block_sand.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"K":
+			# 沙子装饰 2（带碰撞）
+			tempshape = block_sand2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"h":
+			# 沙子装饰 3（带碰撞）
+			tempshape = block_sand3.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"		
+		"J":
+			# 树木装饰 1（带碰撞）
+			tempshape = block_tree1.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"j":
+			# 树木装饰 2（带碰撞）
+			tempshape = block_tree2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"H":
+			# 树木装饰 3（带碰撞）	
+			tempshape = block_tree3.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"d":
+			# 海洋装饰 1（带碰撞）
+			tempshape = block_sea1.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"D":
+			# 海洋装饰 2（带碰撞）		
+			tempshape = block_sea2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"a":
+			# 熔岩装饰 1（带碰撞）
+			tempshape = block_lava1.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"A":
+			# 熔岩装饰 2（带碰撞）
+			tempshape = block_lava2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"
+		"Q":
+			# 熔岩装饰 3（带碰撞）
+			tempshape = block_lava3.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"	
+		"W":
+			# 木头装饰 1（带碰撞）
+			tempshape = block_wood1.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"	
+		"w":
+			# 木头装饰 2（带碰撞）
+			tempshape = block_wood2.instantiate()
+			tempshape.global_position = in_pos
+			_static_parent().add_child(tempshape)
+			node_type = "block"	
+#狗儿～
+		"G":
+			var tempshape_local = enemy_dog.instantiate()
+			tempshape_local.global_position = in_pos
+			_enemy_parent().add_child(tempshape_local)
+			node_type = "enemy"
+			#触碰后播放结束视频
+			if tempshape_local.has_signal("touched_player"):
+				tempshape_local.touched_player.connect(get_parent()._on_dog_touched_player)
+			tempshape = tempshape_local
+
+
+
 	# 如果红色调效果已激活，更新节点颜色
 	if node_type != "" and red_effect_manager != null:
 		red_effect_manager.update_node_colors(node_type, tempshape)
