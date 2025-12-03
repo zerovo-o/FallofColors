@@ -1,43 +1,43 @@
 extends Node
 
-# 完整彩虹效果管理器
-# 负责管理游戏中所有与完整彩虹色相关的视觉效果
+# Full rainbow effect manager
+# Manages all scene-wide visuals related to full rainbow effect
 
 var rainbow_effect_active = false
 var rainbow_modulate: CanvasModulate = null
 
-# 不同类型的节点颜色调整
-const BACKGROUND_RAINBOW = Color(1.0, 1.0, 1.0, 1.0) 
-const BLOCK_RAINBOW = Color(0.9, 0.9, 0.9, 0.7)
-const ENEMY_RAINBOW = Color(0.7, 0.7, 0.7, 1.0) 
+# Per-node-type tints
+# MOD: make them @export for quick tuning in Inspector (minimal change)
+@export var BACKGROUND_RAINBOW: Color = Color(1.0, 1.0, 1.0, 1.0)
+@export var BLOCK_RAINBOW: Color = Color(0.9, 0.9, 0.9, 0.7)
+@export var ENEMY_RAINBOW: Color = Color(0.7, 0.7, 0.7, 1.0)
 
 func _ready():
-	# 初始化为默认状态
+	# Initialize default state
 	rainbow_effect_active = false
 	if rainbow_modulate != null:
 		rainbow_modulate.queue_free()
 		rainbow_modulate = null
 	
-	# 监听彩色宝石收集事件
+	# Listen to rainbow gem event
 	Pooler.gem_collected.connect(_on_gem_collected)
 
 func _on_gem_collected(value: int):
-	# 如果是彩色宝石（价值20个普通宝石）
+	# 20 == rainbow gem
 	if value == 20:
 		activate_rainbow_effect()
 
-# 激活彩虹效果
+# Activate rainbow effect
 func activate_rainbow_effect():
 	rainbow_effect_active = true
 	apply_scene_rainbow_tint()
 
-# 应用场景彩虹色调
+# Apply scene-wide rainbow tint
 func apply_scene_rainbow_tint():
-	# 创建或更新场景着色效果
 	if get_tree() == null:
 		return
 	var root = get_tree().root
-	# 移除其他可能存在的调制效果
+	# Remove other modulates
 	remove_other_modulates()
 	
 	if rainbow_modulate == null:
@@ -48,57 +48,50 @@ func apply_scene_rainbow_tint():
 	else:
 		rainbow_modulate.color = BACKGROUND_RAINBOW
 
-# 移除其他调制效果
+# Remove other modulates
 func remove_other_modulates():
 	var root = get_tree().root
-	# 移除红色调制
 	var red_modulate = root.get_node_or_null("RedModulate")
 	if red_modulate != null:
 		red_modulate.queue_free()
-	# 移除黄色调制
 	var yellow_modulate = root.get_node_or_null("YellowModulate")
 	if yellow_modulate != null:
 		yellow_modulate.queue_free()
-	# 移除蓝调制
 	var blue_modulate = root.get_node_or_null("BlueModulate")
 	if blue_modulate != null:
 		blue_modulate.queue_free()
-	# 移除绿色调制
 	var green_modulate = root.get_node_or_null("GreenModulate")
 	if green_modulate != null:
 		green_modulate.queue_free()
 
-# 重置场景颜色为原始颜色
+# Reset scene color to original
 func reset_scene_colors():
 	rainbow_effect_active = false
-	# 移除彩虹效果
 	if rainbow_modulate != null:
 		if is_instance_valid(rainbow_modulate):
 			rainbow_modulate.queue_free()
 		rainbow_modulate = null
 
-# 更新特定类型节点的颜色
+# Update node colors by type
 func update_node_colors(node_type: String, parent_node: Node):
 	if not rainbow_effect_active:
 		return
 	
 	match node_type:
 		"block":
-			# 更新方块颜色
 			_update_children_color(parent_node, BLOCK_RAINBOW)
 		"enemy":
-			# 更新敌人颜色
 			_update_children_color(parent_node, ENEMY_RAINBOW)
 
-# 递归更新子节点颜色
+# Recursively update children colors
 func _update_children_color(parent: Node, color: Color):
 	for child in parent.get_children():
-		# 跳过角色节点和特定方块节点
-		if child.name == "Player" or child.name == "Spike" or child.name == "Spike_Block" :
+		# Skip special nodes
+		if child.name == "Player" or child.name == "Spike" or child.name == "Spike_Block":
 			continue
 			
 		if child is Sprite2D:
-			# 检查是否是紫色方块或平台，如果是则跳过
+			# Skip purple block/platform
 			if child.name == "PurpleBlock" or child.name == "PurplePlatform":
 				continue
 				
