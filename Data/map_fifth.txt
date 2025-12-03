@@ -28,28 +28,28 @@
 |xxxxxxxxxxxxxxx|
 |xxxxxxxxxxxxxxx|
 =
-xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-|||||xxxx||xxxxxx
-xxx||||||xx||xxxx
-xxxx||xxxxx||||||
-=
-xxxx|||xxxx||xxxx
-x||||||||||||||||
-x|||xxxxxxxxxxx||
-|||xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-=
-xxxxxxxxpxxxxxxxx
-xxxxxxxxxxxxxxxxx
-xxx||||||||||||xx
-xx||xxxxxxxxx||||
+||xxxxxxxxxxxxxxx
+||||xxxxxxxxxxxxx
+|||||xxxxxxxxxxxx
+|||||||||xxxxxxxx
 |||||||||||||||||
 =
-xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-xxxx|||xxxxx|||||
-xx|||||||||||||xx
+|||||||||||||||||
+|||||||||||||||||
+||||xxxxxxxxxxx||
+||xxxxxxxxxxxxxxx
+|xxxxxxxxxxxxxxxx
+=
+|xxxxxxxxxxxxxxxx
+|xxxxxxxxxxxxxxxx
+|xxxxxxxxxxxxxxxx
+|xxxxxxxxxxxxxxxx
+|xxxxxxxxxxxxxxxx
+=
+xxxx|xxxxxxx|xxxx
+xxxx|xxxxxxx|xxxx
+xxxp|||xxxGx|||||
+xxxx|||||||||||xx
 |||||||||||||||||
 =
 x^^xx.......xx^^|
@@ -69,7 +69,6 @@ xxxxxxxxxxxxxxxx|
 |xxxxxxxxxxxxxxxx
 |xxxxxxxxxxxxxxxx
 |||||||||||||||||
-
 
 
 
