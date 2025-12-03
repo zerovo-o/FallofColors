@@ -3,6 +3,7 @@ extends "res://Scripts/turtle.gd"
 
 signal touched_player
 
+
 var _triggered := false
 
 func _ready() -> void:
@@ -11,6 +12,22 @@ func _ready() -> void:
 	# 连接所有 Area2D 的 body_entered 和 area_entered（防止节点名不一致导致没连上）
 	_connect_all_areas(self)
 	print("[Dog] ready, areas connected")
+
+
+	# 让狗不具备“伤害玩家”的碰撞：关闭两块 HurtArea2D
+	if has_node("HurtArea2D"):
+		var h1 := $HurtArea2D as Area2D
+		h1.monitorable = false
+		h1.monitoring = false
+		h1.collision_layer = 0
+		h1.collision_mask = 0
+	if has_node("HurtArea2D2"):
+		var h2 := $HurtArea2D2 as Area2D
+		h2.monitorable = false
+		h2.monitoring = false
+		h2.collision_layer = 0
+		h2.collision_mask = 0
+
 
 # 递归连接所有 Area2D 的两个信号
 func _connect_all_areas(n: Node) -> void:
@@ -66,3 +83,9 @@ func _is_player_related(node: Node) -> bool:
 		cur = cur.get_parent()
 		depth += 1
 	return false
+
+
+# Scripts/dog.gd
+func _on_bounce_area_2d_area_entered(area: Area2D) -> void:
+	# 狗不可被踩死：吞掉父类(turtle.gd)的伤害逻辑
+	pass

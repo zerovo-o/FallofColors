@@ -18,9 +18,13 @@ class_name Master
 @onready var rainbow_full_effect_manager = $"../Scripts/colorGem/RainbowFullEffectManager"
 @onready var green_effect_manager = $"../Scripts/colorGem/GreenEffectManager"
 
+var _ending_started: bool = false#结束播放视频用
+
+
 @export var hurt_inv_time: float = 0.4
 var hurt_time_counter: float = 0.0
 var can_be_hurt : bool = true
+
 
 func hurt_player() -> void:
 	if can_be_hurt:
@@ -349,3 +353,132 @@ func smooth_switch(camera_node: Node) -> void:
 	var tween := create_tween()
 	tween.tween_property(camera_node, "global_position", player.global_position, 0.5)
 	tween.finished.connect(player.start_game)
+
+
+func _on_dog_touched_player() -> void:
+	if _ending_started:
+		return
+	_ending_started = true
+	await _play_ending_video_and_quit()
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Scripts/Master.gd
+func _play_ending_video_and_quit() -> void:
+	var ogv_path: String = "res://Data/ending.ogv"
+	var ogg_path: String = "res://Data/ending.ogg"
+
+	# 列目录便于确认
+	if DirAccess.dir_exists_absolute("res://Data"):
+		var files: PackedStringArray = DirAccess.get_files_at("res://Data")
+		print("[Video] Data files:", files)
+
+	var stream: VideoStream = null
+
+	# 1) 先尝试正常 load（如果已被导入为 VideoStream）
+	var res_ogv: Resource = load(ogv_path)
+	if res_ogv is VideoStream:
+		stream = res_ogv as VideoStream
+		print("[Video] using ogv via load():", (res_ogv as Object).get_class())
+	else:
+		var res_ogg: Resource = load(ogg_path)
+		if res_ogg is VideoStream:
+			stream = res_ogg as VideoStream
+			print("[Video] using ogg(video) via load():", (res_ogg as Object).get_class())
+
+	# 2) 动态实例化 Theora（不依赖 Import 面板）
+	if stream == null:
+		var candidate: String = ""
+		if FileAccess.file_exists(ogv_path):
+			candidate = ogv_path
+		elif FileAccess.file_exists(ogg_path):
+			candidate = ogg_path
+
+		if candidate != "":
+			var vs_obj: Object = ClassDB.instantiate("VideoStreamTheora")
+			if vs_obj != null and vs_obj is VideoStream:
+				var vst: VideoStream = vs_obj as VideoStream
+				vst.set("file", candidate)  # 用 set 规避不同版本属性名差异
+				stream = vst
+				print("[Video] using VideoStreamTheora (dynamic):", candidate)
+	if stream == null:
+		push_error("[Video] Could not load Theora video (.ogv/.ogg). Ensure the file exists and is Theora-encoded.")
+		return
+
+	# 顶层画布，盖住一切
+	var layer: CanvasLayer = CanvasLayer.new()
+	layer.layer = 100
+	layer.process_mode = Node.PROCESS_MODE_ALWAYS   # 关键：暂停时也继续
+	add_child(layer)
+
+	# 全屏容器
+	var overlay: Control = Control.new()
+	overlay.name = "VideoOverlay"
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP  # 吞输入，避免透传
+	overlay.anchor_left = 0.0
+	overlay.anchor_top = 0.0
+	overlay.anchor_right = 1.0
+	overlay.anchor_bottom = 1.0
+	#（继承 ALWAYS，无需单独设置）
+	layer.add_child(overlay)
+
+	# 贴图控件
+	var rect: TextureRect = TextureRect.new()
+	rect.name = "VideoSurface"
+	rect.expand = true
+	rect.anchor_left = 0.0
+	rect.anchor_top = 0.0
+	rect.anchor_right = 1.0
+	rect.anchor_bottom = 1.0
+	overlay.add_child(rect)
+
+	# 解码器
+	var v: VideoStreamPlayer = VideoStreamPlayer.new()
+	v.name = "EndingVideo"
+	v.expand = true
+	v.stream = stream
+	v.visible = true
+	v.process_mode = Node.PROCESS_MODE_ALWAYS      # 关键：暂停时也继续解码/播放
+	overlay.add_child(v)
+
+	SoundManager.stop_all_sounds()
+
+	await get_tree().process_frame
+	v.play()
+	get_tree().paused = true                       # 关键：启动播放后立刻暂停世界
+
+	# 预热与主循环保持不变（我们用 process_frame 驱动贴图拷贝）
+	var has_frame: bool = false
+	var warmup_frames: int = 60
+	var i: int = 0
+	while i < warmup_frames:
+		var tex: Texture2D = v.get_video_texture()
+		if tex != null:
+			rect.texture = tex
+			has_frame = true
+			break
+		await get_tree().process_frame
+		i += 1
+
+	while v.is_playing():
+		var tex2: Texture2D = v.get_video_texture()
+		if tex2 != null:
+			rect.texture = tex2
+		await get_tree().process_frame
+
+	print("[Video] finished, quitting")
+	get_tree().quit()

@@ -367,17 +367,47 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
 			node_type = "block"	
-#狗儿～
+
+# 狗儿～
 		"G":
-			var tempshape_local = enemy_dog.instantiate()
+			# 实例化狗（显式类型，方便后续使用 global_position）
+			var tempshape_local: Node2D = enemy_dog.instantiate() as Node2D
 			tempshape_local.global_position = in_pos
-			_enemy_parent().add_child(tempshape_local)
-			node_type = "enemy"
-			#触碰后播放结束视频
+
+			# 触碰后播放结束视频
 			if tempshape_local.has_signal("touched_player"):
 				tempshape_local.touched_player.connect(get_parent()._on_dog_touched_player)
+
+			# MOD: 不参与彩虹期“局部着色”——分组与元数据双重标记，管理器会跳过
+			tempshape_local.add_to_group("NoRainbowTint")
+			tempshape_local.set_meta("no_rainbow_tint", true)
+
+			# MOD: 不被“全屏覆盖层”染色——把狗放到更高的 CanvasLayer（绘制顺序更靠前）
+			# 注意：这会让狗不在段容器内，段被删除时狗不会随段清理（终点狗一般可接受）
+			var master: Node = get_parent()
+			var dog_layer: CanvasLayer = master.get_node_or_null("DogLayer") as CanvasLayer
+			if dog_layer == null:
+				var cl: CanvasLayer = CanvasLayer.new()
+				cl.name = "DogLayer"
+				cl.layer = 50  # 高于覆盖层使用的层（确保画在覆盖层之上）
+				cl.follow_viewport_enabled = true  # Godot 4：跟随视口，保持世界坐标运动
+				master.add_child(cl)
+				dog_layer = cl
+
+			# 记录并还原世界坐标，防止换父节点导致位置跳变（显式类型，避免推断报错）
+			var prev_pos: Vector2 = tempshape_local.global_position
+			dog_layer.add_child(tempshape_local)
+			tempshape_local.global_position = prev_pos
+
+			# 保持原有行为：返回该实例和类型
+			node_type = "enemy"
 			tempshape = tempshape_local
 
+			
+			
+			
+			
+			
 
 
 	# 如果红色调效果已激活，更新节点颜色
