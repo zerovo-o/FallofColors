@@ -1,14 +1,14 @@
 [gd_scene load_steps=28 format=3 uid="uid://bddcuuo43u1ei"]
 
-[ext_resource type="Script" path="res://Scripts/playermover.gd" id="1_rylju"]
-[ext_resource type="Shader" path="res://Scenes/life_flash.gdshader" id="2_4n4ay"]
+[ext_resource type="Script" uid="uid://bcr4sx0g4vxf4" path="res://Scripts/playermover.gd" id="1_rylju"]
+[ext_resource type="Shader" uid="uid://dxdcivuwo5e2r" path="res://Scenes/life_flash.gdshader" id="2_4n4ay"]
 [ext_resource type="Texture2D" uid="uid://ccndbl2dusgcd" path="res://Art/player.png" id="2_mcjur"]
-[ext_resource type="Script" path="res://Scripts/bullet_spawner.gd" id="3_tda30"]
-[ext_resource type="Script" path="res://Scripts/spriteshadercontroller.gd" id="4_c5a2r"]
-[ext_resource type="Script" path="res://Scripts/camera_shake.gd" id="4_frbf7"]
-[ext_resource type="Script" path="res://Scripts/Jump_moveSM.gd" id="5_yo8sr"]
-[ext_resource type="Script" path="res://Scripts/ComboTracker.gd" id="6_8atna"]
-[ext_resource type="Script" path="res://Scripts/damagehandler.gd" id="8_aqhwo"]
+[ext_resource type="Script" uid="uid://j0kjbtv8hu1q" path="res://Scripts/bullet_spawner.gd" id="3_tda30"]
+[ext_resource type="Script" uid="uid://bb8q026uhjhhu" path="res://Scripts/spriteshadercontroller.gd" id="4_c5a2r"]
+[ext_resource type="Script" uid="uid://bd8s6qhgtysj8" path="res://Scripts/camera_shake.gd" id="4_frbf7"]
+[ext_resource type="Script" uid="uid://cqcux1ewmqsf4" path="res://Scripts/Jump_moveSM.gd" id="5_yo8sr"]
+[ext_resource type="Script" uid="uid://ioq3qsrvvncm" path="res://Scripts/ComboTracker.gd" id="6_8atna"]
+[ext_resource type="Script" uid="uid://b8j03j3etsa1c" path="res://Scripts/damagehandler.gd" id="8_aqhwo"]
 [ext_resource type="Texture2D" uid="uid://bt4r6f8km732x" path="res://Art/bulletFlash-sheet.png" id="8_ger0w"]
 [ext_resource type="PackedScene" uid="uid://dqy0nwfslgm2n" path="res://Scenes/deathparticle.tscn" id="11_8qs1s"]
 
@@ -38,7 +38,7 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_uod1l"]
 _data = {
-"flash": SubResource("Animation_ucb32")
+&"flash": SubResource("Animation_ucb32")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nkilp"]
@@ -184,14 +184,14 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_np4ek"]
 _data = {
-"bounce": SubResource("Animation_h86aw"),
-"fall": SubResource("Animation_l4uve"),
-"idle": SubResource("Animation_02mpk"),
-"jump": SubResource("Animation_eb7q6"),
-"run": SubResource("Animation_noa8v"),
-"shoot": SubResource("Animation_y171k"),
-"stop": SubResource("Animation_wkrnq"),
-"wall_slide": SubResource("Animation_orrp4")
+&"bounce": SubResource("Animation_h86aw"),
+&"fall": SubResource("Animation_l4uve"),
+&"idle": SubResource("Animation_02mpk"),
+&"jump": SubResource("Animation_eb7q6"),
+&"run": SubResource("Animation_noa8v"),
+&"shoot": SubResource("Animation_y171k"),
+&"stop": SubResource("Animation_wkrnq"),
+&"wall_slide": SubResource("Animation_orrp4")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bgaef"]
@@ -224,17 +224,16 @@ script = ExtResource("4_frbf7")
 
 [node name="JumpAndMove" type="Node2D" parent="." node_paths=PackedStringArray("char")]
 script = ExtResource("5_yo8sr")
-jump_velocity = -210.0
-gravity = 750.0
-max_fall_speed = 450.0
+jump_velocity = -200.0
+gravity = 500.0
+max_fall_speed = 400.0
 ground_acceleration = 400.0
 air_acceleration = 400.0
-ground_friction = 400
-air_friction = 400
-max_ground_speed = 75.0
-max_air_speed = 75.0
+ground_friction = 3000
+air_friction = 3000
+max_ground_speed = 90.0
+max_air_speed = 90.0
 max_jump_mod = 1.25
-air_jump_velocity = -151.0
 max_air_jump = 4
 char = NodePath("..")
 wall_slide_speed = 100.0
@@ -266,7 +265,7 @@ frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="bulletflash"]
 libraries = {
-"": SubResource("AnimationLibrary_uod1l")
+&"": SubResource("AnimationLibrary_uod1l")
 }
 
 [node name="BounceArea2D" type="Area2D" parent="."]
@@ -288,7 +287,7 @@ shape = SubResource("RectangleShape2D_vy7wg")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_np4ek")
+&"": SubResource("AnimationLibrary_np4ek")
 }
 
 [node name="Area2D" type="Area2D" parent="."]

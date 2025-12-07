@@ -8,20 +8,19 @@
 [ext_resource type="Script" uid="uid://dgcy32aiqureq" path="res://Scripts/MainUI.gd" id="5_qqy6r"]
 [ext_resource type="Script" uid="uid://bwywqw10uk3pr" path="res://Scripts/startgameUI.gd" id="7_3guq7"]
 [ext_resource type="Texture2D" uid="uid://dpnhokxealp4a" path="res://Art/bullets/Coin.png" id="7_tic6n"]
-[ext_resource type="Texture2D" uid="uid://7kxjqjr0kxeg" path="res://Art/title.png" id="9_k72x4"]
+[ext_resource type="Texture2D" path="res://Art/title1.png" id="9_k72x4"]
 [ext_resource type="Script" uid="uid://chr4m48uldeie" path="res://Scripts/enemyholderoptimizer.gd" id="10_a4k58"]
 [ext_resource type="Texture2D" uid="uid://b3qrkwyemkvca" path="res://Art/Blocks/OpeningHatch.png" id="11_kbrbr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ba7eb"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="Master" type="Node" node_paths=PackedStringArray("mapdecider", "mapspawner", "player", "StartUI", "MainUI")]
+[node name="Master" type="Node" node_paths=PackedStringArray("mapdecider", "mapspawner", "player", "StartUI")]
 script = ExtResource("1_4w4w7")
 mapdecider = NodePath("MapDecider")
 mapspawner = NodePath("MapSpawner")
 player = NodePath("Player")
 StartUI = NodePath("StartGameUI")
-MainUI = NodePath("Player/CanvasLayer/MainUI")
 
 [node name="MapDecider" parent="." instance=ExtResource("1_lpuwr")]
 
@@ -34,6 +33,8 @@ position = Vector2(104, -200)
 bullet_holder = NodePath("../BulletHolder")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Player"]
+layer = 80
+
 
 [node name="MainUI" type="Control" parent="Player/CanvasLayer"]
 modulate = Color(1, 1, 1, 0)
