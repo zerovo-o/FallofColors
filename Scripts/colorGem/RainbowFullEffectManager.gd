@@ -79,22 +79,6 @@ func update_node_colors(node_type: String, parent_node: Node):
 	
 	match node_type:
 		"block":
-			_update_children_color(parent_node, BLOCK_RAINBOW)
+			pass  # 已删除 _update_children_color 函数
 		"enemy":
-			_update_children_color(parent_node, ENEMY_RAINBOW)
-
-# Recursively update children colors
-func _update_children_color(parent: Node, color: Color):
-	for child in parent.get_children():
-		# Skip special nodes
-		if child.name == "Player" or child.name == "Spike" or child.name == "Spike_Block":
-			continue
-			
-		if child is Sprite2D:
-			# Skip purple block/platform
-			if child.name == "PurpleBlock" or child.name == "PurplePlatform":
-				continue
-				
-			child.modulate = color
-		elif child.get_child_count() > 0:
-			_update_children_color(child, color)
+			pass  # 已删除 _update_children_color 函数

@@ -308,10 +308,10 @@ func apply_persistent_green_effect():
 	if green_modulate == null:
 		green_modulate = CanvasModulate.new()
 		green_modulate.name = "GreenModulate"
-		green_modulate.color = Color(0.2, 1.2, 0.2, 1.0)  # 浅绿色 - 稍微浅一些的绿色背景
+		green_modulate.color = Color(0.684, 1.114, 0.61, 0.867)  # 浅绿色 - 稍微浅一些的绿色背景
 		root.add_child(green_modulate)
 	else:
-		green_modulate.color = Color(0.2, 1.2, 0.2, 1.0)
+		green_modulate.color = Color(0.427, 1.0, 0.267, 0.51)
 
 # 移除其他调制效果
 func remove_other_modulates():
@@ -341,7 +341,7 @@ func play_fullscreen_green_effect():
 		
 	# 创建一个全屏的绿色调效果
 	var green_overlay = ColorRect.new()
-	green_overlay.color = Color(0.0, 1.0, 0.0, 0.9)  # 纯绿色，高透明度
+	green_overlay.color = Color(0.427, 0.89, 0.153, 0.518)  # 纯绿色，高透明度
 	green_overlay.anchor_right = 1
 	green_overlay.anchor_bottom = 1
 	green_overlay.z_index = 100  # 确保在最上层

@@ -308,10 +308,10 @@ func apply_persistent_warm_effect():
 	if warm_modulate == null:
 		warm_modulate = CanvasModulate.new()
 		warm_modulate.name = "YellowModulate"
-		warm_modulate.color = Color(1.2, 0.8, 0.4, 1.0)  # 暖橙色 - 红橙黄暖色调
+		warm_modulate.color = Color(1.111, 1.111, 0.0, 0.8)  # 暖橙色 - 红橙黄暖色调
 		root.add_child(warm_modulate)
 	else:
-		warm_modulate.color = Color(1.2, 0.8, 0.4, 1.0)
+		warm_modulate.color = Color(1.111, 1.111, 0.0, 0.784)
 
 # 移除其他调制效果
 func remove_other_modulates():
@@ -341,7 +341,7 @@ func play_fullscreen_warm_effect():
 		
 	# 创建一个全屏的暖色调效果
 	var warm_overlay = ColorRect.new()
-	warm_overlay.color = Color(1.0, 0.8, 0.0, 0.9)  # 金黄色，高透明度
+	warm_overlay.color = Color(1.0, 1.0, 0.0, 0.831)  # 金黄色，高透明度
 	warm_overlay.anchor_right = 1
 	warm_overlay.anchor_bottom = 1
 	warm_overlay.z_index = 100  # 确保在最上层

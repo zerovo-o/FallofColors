@@ -7,9 +7,9 @@ var red_effect_active = false
 var red_modulate: CanvasModulate = null
 
 # 不同类型的节点颜色调整
-const BACKGROUND_RED = Color(1.2, 0.3, 0.3, 1.0) 
-const BLOCK_RED = Color(0.9, 0.5, 0.5, 0.6)
-const ENEMY_RED = Color(0.5, 0.0, 0.0, 1.0) 
+const BACKGROUND_RED = Color(1.0, 0.204, 0.22, 0.424) 
+const BLOCK_RED = Color(0.973, 0.188, 0.204, 0.58)
+const ENEMY_RED = Color(0.713, 0.0, 0.006, 0.596) 
 
 func _ready():
 	# 初始化为默认状态
@@ -85,43 +85,7 @@ func update_node_colors(node_type: String, parent_node: Node):
 	match node_type:
 		"block":
 			# 更新方块颜色
-			_update_children_color(parent_node, BLOCK_RED)
+			pass  # 已删除 _update_children_color 函数
 		"enemy":
 			# 更新敌人颜色
-			_update_children_color(parent_node, ENEMY_RED)
-
-# 递归更新子节点颜色
-func _update_children_color(parent: Node, color: Color):
-	for child in parent.get_children():
-		# 跳过角色节点和特定方块节点
-		   var skip_names = [
-			   "player", "spike", "spike_block",
-			   "blockmountain", "block_mountain",
-			   "blocksand", "block_sand",
-			   "blocksand2", "block_sand2",
-			   "blocktree1", "block_tree1",
-			   "blocktree2", "block_tree2",
-			   "blocktree3", "block_tree3",
-			   "lavawall", "lava_wall",
-			   "leafwall", "leaf_wall",
-			   "leafwall2", "leaf_wall2",
-			   "leafwall3", "leaf_wall3",
-			   "leafwall4", "leaf_wall4",
-			   "sandwall", "sand_wall",
-			   "sandwall2", "sand_wall2",
-			   "seawall", "sea_wall",
-			   "seawall2", "sea_wall2"
-		   ]
-		   if skip_names.has(child.name.to_lower()):
-			   continue
-			
-		   if child is Sprite2D:
-			   # 跳过指定方块Sprite2D节点
-			   if skip_names.has(child.name.to_lower()):
-				   continue
-			   # 检查是否是紫色方块或平台，如果是则跳过
-			   if child.name == "PurpleBlock" or child.name == "PurplePlatform":
-				   continue
-			   child.modulate = color
-		elif child.get_child_count() > 0:
-			_update_children_color(child, color)
+			pass  # 已删除 _update_children_color 函数

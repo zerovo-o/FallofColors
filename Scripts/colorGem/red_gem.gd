@@ -308,10 +308,10 @@ func apply_persistent_red_effect():
 	if red_modulate == null:
 		red_modulate = CanvasModulate.new()
 		red_modulate.name = "RedModulate"
-		red_modulate.color = Color(1.2, 0.2, 0.2, 1.0)  # 浅红色 - 稍微浅一些的红色背景
+		red_modulate.color = Color(1.0, 0.525, 0.471, 0.702)  # 浅红色 - 稍微浅一些的红色背景
 		root.add_child(red_modulate)
 	else:
-		red_modulate.color = Color(1.2, 0.2, 0.2, 1.0)
+		red_modulate.color = Color(0.905, 0.303, 0.076, 0.878)
 
 # 移除其他调制效果
 func remove_other_modulates():
@@ -341,7 +341,7 @@ func play_fullscreen_red_effect():
 		
 	# 创建一个全屏的红色调效果
 	var red_overlay = ColorRect.new()
-	red_overlay.color = Color(1.0, 0.0, 0.0, 0.9)  # 纯红色，高透明度
+	red_overlay.color = Color(1.0, 0.408, 0.337, 0.635)  # 纯红色，高透明度
 	red_overlay.anchor_right = 1
 	red_overlay.anchor_bottom = 1
 	red_overlay.z_index = 100  # 确保在最上层
