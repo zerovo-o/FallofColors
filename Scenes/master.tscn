@@ -8,9 +8,14 @@
 [ext_resource type="Script" uid="uid://dgcy32aiqureq" path="res://Scripts/MainUI.gd" id="5_qqy6r"]
 [ext_resource type="Script" uid="uid://bwywqw10uk3pr" path="res://Scripts/startgameUI.gd" id="7_3guq7"]
 [ext_resource type="Texture2D" uid="uid://dpnhokxealp4a" path="res://Art/bullets/Coin.png" id="7_tic6n"]
-[ext_resource type="Texture2D" path="res://Art/title1.png" id="9_k72x4"]
+[ext_resource type="Texture2D" uid="uid://8jp2yk03rjvr" path="res://Art/title.png" id="9_k72x4"]
 [ext_resource type="Script" uid="uid://chr4m48uldeie" path="res://Scripts/enemyholderoptimizer.gd" id="10_a4k58"]
 [ext_resource type="Texture2D" uid="uid://b3qrkwyemkvca" path="res://Art/Blocks/OpeningHatch.png" id="11_kbrbr"]
+[ext_resource type="PackedScene" uid="uid://cfjq9d0c6tqcx" path="res://Scenes/colorGem/red_gem.tscn" id="13_red_gem"]
+[ext_resource type="PackedScene" uid="uid://cfjq9d0c6tqcy" path="res://Scenes/colorGem/blue_gem.tscn" id="14_blue_gem"]
+[ext_resource type="PackedScene" uid="uid://cfjq9d0c6tqcz" path="res://Scenes/colorGem/yellow_gem.tscn" id="15_yellow_gem"]
+[ext_resource type="PackedScene" uid="uid://cfjq9d0c6tqda" path="res://Scenes/colorGem/green_gem.tscn" id="16_green_gem"]
+[ext_resource type="PackedScene" uid="uid://cfjq9d0c6tqdb" path="res://Scenes/colorGem/rainbow_gem.tscn" id="17_rainbow_gem"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ba7eb"]
 bg_color = Color(0, 0, 0, 1)
@@ -166,32 +171,26 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ba7eb")
 [node name="MarginContainer" type="MarginContainer" parent="StartGameUI/Panel"]
 layout_mode = 0
 offset_left = 443.0
-offset_top = 212.0
+offset_top = 330.0
 offset_right = 541.0
-offset_bottom = 272.0
+offset_bottom = 390.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="StartGameUI/Panel/MarginContainer"]
 layout_mode = 2
 
 [node name="StartButton" type="Button" parent="StartGameUI/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-focus_neighbor_top = NodePath("../OptionsButton")
-focus_neighbor_bottom = NodePath("../OptionsButton")
 button_mask = 0
 text = "start"
 vertical_icon_alignment = 0
 
-[node name="OptionsButton" type="Button" parent="StartGameUI/Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
-focus_neighbor_top = NodePath("../StartButton")
-focus_neighbor_bottom = NodePath("../StartButton")
-button_mask = 0
-text = "options"
-vertical_icon_alignment = 0
-
 [node name="Sprite2D" type="Sprite2D" parent="StartGameUI/Panel"]
-position = Vector2(508, 350)
+position = Vector2(494, 230)
 texture = ExtResource("9_k72x4")
+
+
+[node name="DecorativeGems" type="Node2D" parent="StartGameUI/Panel"]
+position = Vector2(0, 0)
 
 [node name="BlackOut" type="Panel" parent="StartGameUI"]
 custom_minimum_size = Vector2(5000, 5000)
