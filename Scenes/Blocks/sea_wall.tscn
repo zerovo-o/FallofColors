@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://sea_wall_scene"]
+
+[ext_resource type="Texture2D" uid="uid://sea_tex" path="res://Art/Blocks/sea_wall.png" id="1_sea1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sea"]
+size = Vector2(16, 16)
+
+[node name="SeaWall" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_sea1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sea")

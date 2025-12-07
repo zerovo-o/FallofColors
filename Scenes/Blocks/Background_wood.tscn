@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://wood1"]
+
+[ext_resource type="Texture2D" uid="uid://ceaaujpi1ruv0" path="res://Art/Blocks/Background_wood.png" id="1_wood"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dxusy"]
+size = Vector2(16, 15)
+
+[node name="BackgroundWood" type="StaticBody2D"]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 1.1920929e-07)
+scale = Vector2(0.1, 0.15624999)
+texture = ExtResource("1_wood")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dxusy")

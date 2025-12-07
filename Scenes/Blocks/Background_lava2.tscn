@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://lava2"]
+
+[ext_resource type="Texture2D" uid="uid://o6aerroovxbc" path="res://Art/Blocks/Background_lava2.png" id="1_lava2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dxusy"]
+size = Vector2(16, 15)
+
+[node name="BackgroundLava2" type="StaticBody2D"]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1.1920929e-07, -5.9604645e-08)
+scale = Vector2(0.099999994, 0.14583334)
+texture = ExtResource("1_lava2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dxusy")

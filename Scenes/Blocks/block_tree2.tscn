@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://block_tree2_scene"]
+
+[ext_resource type="Texture2D" uid="uid://treetex2" path="res://Art/Blocks/block_tree2.png" id="1_tree2"]
+
+[node name="BlockTree2" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_tree2")
+scale = Vector2(1, 1)

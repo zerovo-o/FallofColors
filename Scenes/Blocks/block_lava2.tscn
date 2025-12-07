@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://rc0ln2kurc4y"]
+
+[ext_resource type="Texture2D" uid="uid://7xbbvsiyl6ip" path="res://Art/Blocks/block_lava2.png" id="1_lava2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q0x4q"]
+size = Vector2(16, 16)
+
+[node name="BlockLava2" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_q0x4q")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_lava2")

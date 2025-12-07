@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://sand_wall_scene"]
+
+[ext_resource type="Texture2D" uid="uid://sand_tex" path="res://Art/Blocks/sand_wall.png" id="1_sand1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sand"]
+size = Vector2(16, 16)
+
+[node name="SandWall" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_sand1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sand")

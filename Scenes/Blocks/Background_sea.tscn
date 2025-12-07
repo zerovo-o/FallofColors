@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://sea1"]
+
+[ext_resource type="Texture2D" uid="uid://d3jov23qlm4w" path="res://Art/Blocks/Background_sea.png" id="1_sea"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dxusy"]
+size = Vector2(16, 15)
+
+[node name="BackgroundSea" type="StaticBody2D"]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -0.5)
+scale = Vector2(0.10000002, 0.15625001)
+texture = ExtResource("1_sea")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dxusy")

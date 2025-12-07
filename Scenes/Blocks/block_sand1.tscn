@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://j15e2lowh53y"]
+
+[ext_resource type="Texture2D" uid="uid://bgbqgebbc1ibi" path="res://Art/Blocks/block_sand1.png" id="1_sandA"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0jup"]
+size = Vector2(16, 16)
+
+[node name="BlockSand3" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_t0jup")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_sandA")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://drcn8sclbsom8"]
+
+[ext_resource type="Texture2D" uid="uid://c08ih2je7yuun" path="res://Art/Blocks/block_mountain.png" id="1_mtn1"]
+
+[node name="BlockMountain" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_mtn1")

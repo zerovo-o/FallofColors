@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://wc8lwhe20l8x"]
+
+[ext_resource type="Texture2D" uid="uid://8xtny5y7suxi" path="res://Art/Blocks/leaf_wall2.png" id="1_leaf2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_leaf2"]
+size = Vector2(16, 16)
+
+[node name="LeafWall2" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_leaf2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_leaf2")

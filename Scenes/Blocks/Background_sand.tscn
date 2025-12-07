@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://sand1"]
+
+[ext_resource type="Texture2D" uid="uid://bxvg5nfp6h6px" path="res://Art/Blocks/Background_sand.png" id="1_sand"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dxusy"]
+size = Vector2(16, 15)
+
+[node name="BackgroundSand" type="StaticBody2D"]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-0.14035118, -0.1403507)
+scale = Vector2(0.28070176, 0.28070176)
+texture = ExtResource("1_sand")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dxusy")

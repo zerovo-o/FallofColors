@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bahkyv0sn27yn"]
+
+[ext_resource type="Texture2D" uid="uid://w85e2x5nid0o" path="res://Art/Blocks/block_sea2.png" id="1_sea2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0jup"]
+size = Vector2(16, 16)
+
+[node name="BlockSea2" type="StaticBody2D"]
+collision_mask = 14
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_t0jup")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_sea2")
