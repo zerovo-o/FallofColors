@@ -33,6 +33,7 @@ const block_lava2 : PackedScene = preload("res://Scenes/Blocks/block_lava2.tscn"
 const block_lava3 : PackedScene = preload("res://Scenes/Blocks/block_lava3.tscn")
 const block_wood1 : PackedScene = preload("res://Scenes/Blocks/block_wood1.tscn")
 const block_wood2 : PackedScene = preload("res://Scenes/Blocks/block_wood2.tscn")
+const block_barrier : PackedScene = preload("res://Scenes/Blocks/barrier_block.tscn") 
 
 const block_floor : PackedScene = preload("res://Scenes/Blocks/floor_block.tscn")
 const block_break_floor : PackedScene = preload("res://Scenes/Blocks/breakable_block.tscn")
@@ -43,6 +44,23 @@ const enemy_turtle : PackedScene = preload("res://Scenes/Enemy/turtle.tscn")
 const enemy_blob : PackedScene = preload("res://Scenes/Enemy/blob.tscn")
 const enemy_frog : PackedScene = preload("res://Scenes/Enemy/frog.tscn")
 const enemy_plant : PackedScene = preload("res://Scenes/Enemy/spore_shooter.tscn")
+
+const Background_lava : PackedScene = preload("res://Scenes/Blocks/Background_lava.tscn")
+const Background_lava2 : PackedScene = preload("res://Scenes/Blocks/Background_lava2.tscn")
+const Background_sand : PackedScene = preload("res://Scenes/Blocks/Background_sand.tscn")
+const Background_sea : PackedScene = preload("res://Scenes/Blocks/Background_sea.tscn")
+const Background_wood : PackedScene = preload("res://Scenes/Blocks/Background_wood.tscn")
+
+
+const enemy_bee : PackedScene = preload("res://Scenes/Enemy/bee.tscn")
+const enemy_pig : PackedScene = preload("res://Scenes/Enemy/pig.tscn")
+const enemy_ghost : PackedScene = preload("res://Scenes/Enemy/ghost.tscn")
+const enemy_slime : PackedScene = preload("res://Scenes/Enemy/slime.tscn")
+const enemy_scorpion : PackedScene = preload("res://Scenes/Enemy/scorpion.tscn")
+const enemy_flyingfish : PackedScene = preload("res://Scenes/Enemy/flyingfish.tscn")
+const enemy_nautilus : PackedScene = preload("res://Scenes/Enemy/nautilus.tscn")
+const enemy_lavabat : PackedScene = preload("res://Scenes/Enemy/lavabat.tscn")
+const enemy_bunny : PackedScene = preload("res://Scenes/Enemy/bunny.tscn")
 
 const big_fan : PackedScene = preload("res://Scenes/Blocks/bigfan.tscn")
 
@@ -73,6 +91,57 @@ const enemy_dog : PackedScene = preload("res://Scenes/Enemy/dog.tscn")
 @onready var blue_effect_manager = $"../Scripts/colorGem/BlueEffectManager"
 @onready var rainbow_full_effect_manager = $"../Scripts/colorGem/RainbowFullEffectManager"
 @onready var green_effect_manager = $"../Scripts/colorGem/GreenEffectManager"
+
+
+#1206 canvas复用函数
+# 确保父节点下存在指定 CanvasLayer（若无则创建）
+func _ensure_canvas_layer(parent: Node, name: String, layer_idx: int) -> CanvasLayer:
+	var layer := parent.get_node_or_null(name) as CanvasLayer
+	if layer == null:
+		layer = CanvasLayer.new()
+		layer.name = name
+		layer.layer = layer_idx              # 高于覆盖层（覆盖层一般用 10）
+		layer.follow_viewport_enabled = true # 世界坐标正确跟随相机
+		parent.add_child(layer)
+	return layer
+
+# 在指定 CanvasLayer 下实例化一个“免疫变色”的 Node2D
+func _spawn_immune_on_layer(scene: PackedScene, pos: Vector2i, layer_parent: Node, layer_name: String, layer_idx: int, extra_group: String = "") -> Node2D:
+	var n := scene.instantiate() as Node2D
+	n.global_position = pos
+	n.add_to_group("NoRainbowTint")
+	if extra_group != "":
+		n.add_to_group(extra_group)
+	n.set_meta("no_rainbow_tint", true)
+
+	var layer := _ensure_canvas_layer(layer_parent, layer_name, layer_idx)
+	var prev := n.global_position
+	layer.add_child(n)            # 换父到 CanvasLayer
+	n.global_position = prev      # 还原世界坐标
+	return n
+
+# 全局：宝石/回血 → Master 下 GemLayer(layer=40)，不随段删除
+func _spawn_on_gem_layer(scene: PackedScene, pos: Vector2i) -> Node2D:
+	return _spawn_immune_on_layer(scene, pos, get_parent(), "GemLayer", 40, "gem_ignore_modulate")
+
+# 段内：静态物（如 ^）→ 当前段 Tiles 下 StaticHighLayer(layer=40)，随段删除
+func _spawn_on_segment_static_high(scene: PackedScene, pos: Vector2i) -> Node2D:
+	return _spawn_immune_on_layer(scene, pos, _static_parent(), "StaticHighLayer", 40)
+
+# 段内：敌人 → 当前段 Enemies 下 EnemyHighLayer(layer=40)，随段删除
+func _spawn_on_segment_enemy_high(scene: PackedScene, pos: Vector2i) -> Node2D:
+	return _spawn_immune_on_layer(scene, pos, _enemy_parent(), "EnemyHighLayer", 40)
+
+
+
+
+
+
+
+
+
+
+
 
 # ========= 按段容器覆盖（关键） =========
 # Master 生成一段时，会建一个 Segment_X 节点：
@@ -106,6 +175,8 @@ func set_starting_row():
 		temp.global_position = Vector2i(offset,80)
 		add_child(temp)
 
+
+
 # ========= 字符 → 实体 =========
 func spawn_block(in_shape : String, in_pos : Vector2i ):
 	var tempshape
@@ -134,18 +205,18 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
 			node_type = "block"
+			
 		"^":
-			# 弹出刺：有伤害信号，直接连接到 Master 的 hurt_player（MapSpawner 的父节点就是 Master）
-			tempshape = block_spike_trap.instantiate()
-			tempshape.hurt_player.connect(get_parent().hurt_player)
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
+			var trap := _spawn_on_segment_static_high(block_spike_trap, in_pos)
+			if trap.has_signal("hurt_player"):
+				trap.hurt_player.connect(get_parent().hurt_player)
+			tempshape = trap
+
+		
 		"*":
-			tempshape = block_spike_static.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
+			tempshape = _spawn_on_segment_static_high(block_spike_static, in_pos)
+
+
 		"b":
 			tempshape = enemy_bat.instantiate()
 			tempshape.global_position = in_pos
@@ -180,6 +251,19 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape.global_position = in_pos
 			_enemy_parent().add_child(tempshape)
 			node_type = "enemy"
+
+		# 新的怪物
+		"e": tempshape = _spawn_on_segment_enemy_high(enemy_bee, in_pos);          node_type = "enemy"
+		"P": tempshape = _spawn_on_segment_enemy_high(enemy_pig, in_pos);          node_type = "enemy"
+		"o": tempshape = _spawn_on_segment_enemy_high(enemy_ghost, in_pos);        node_type = "enemy"
+		"s": tempshape = _spawn_on_segment_enemy_high(enemy_slime, in_pos);        node_type = "enemy"
+		"X": tempshape = _spawn_on_segment_enemy_high(enemy_scorpion, in_pos);     node_type = "enemy"
+		"f": tempshape = _spawn_on_segment_enemy_high(enemy_flyingfish, in_pos);   node_type = "enemy"
+		"u": tempshape = _spawn_on_segment_enemy_high(enemy_nautilus, in_pos);     node_type = "enemy"
+		"R": tempshape = _spawn_on_segment_enemy_high(enemy_lavabat, in_pos);      node_type = "enemy"
+		"U": tempshape = _spawn_on_segment_enemy_high(enemy_bunny, in_pos);        node_type = "enemy"
+
+
 		"1":
 			tempshape = PUSpread.instantiate()
 			tempshape.global_position = in_pos
@@ -196,177 +280,111 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 			tempshape = PUSBullets.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			
 		"5":
 			tempshape = PULife.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
+			# 回血 PU：忽略局部着色，抬到高层，避免被覆盖层遮色
+			var pu_local: Node2D = PULife.instantiate() as Node2D
+			pu_local.global_position = in_pos
+			# 标记：让 EffectManager 的局部调色跳过（与宝石/狗同款）
+			pu_local.add_to_group("NoRainbowTint")
+			pu_local.add_to_group("pickup_ignore_modulate")  # 可选，便于自定义筛选
+			pu_local.set_meta("no_rainbow_tint", true)
+			# 抬层：放到 Master 下的 GemLayer（layer=40，高于覆盖层 layer=10）
+			var master: Node = get_parent()
+			var gem_layer: CanvasLayer = master.get_node_or_null("GemLayer") as CanvasLayer
+			if gem_layer == null:
+				var cl := CanvasLayer.new()
+				cl.name = "GemLayer"
+				cl.layer = 40
+				cl.follow_viewport_enabled = true
+				master.add_child(cl)
+				gem_layer = cl
+			# 保持世界坐标不跳变
+			var prev_pos: Vector2 = pu_local.global_position
+			gem_layer.add_child(pu_local)
+			pu_local.global_position = prev_pos
+			tempshape = pu_local
+			
+			
+			
 		"6":
 			tempshape = PUWall.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-		"r":  # 红色宝石
-			tempshape = red_gem.instantiate()
+			
+			
+			
+		# 红/黄/蓝/绿宝石
+		"r": tempshape = _spawn_on_gem_layer(red_gem, in_pos);    node_type = "gem"
+		"y": tempshape = _spawn_on_gem_layer(yellow_gem, in_pos); node_type = "gem"
+		"l": tempshape = _spawn_on_gem_layer(blue_gem, in_pos);   node_type = "gem"
+		"g": tempshape = _spawn_on_gem_layer(green_gem, in_pos);  node_type = "gem"
+			
+		# 彩虹宝石
+		"p": tempshape = _spawn_on_gem_layer(rainbow_gem, in_pos); node_type = "gem"
+		
+		
+		"O": tempshape = _spawn_on_segment_static_high(lava_wall, in_pos)
+		"z": tempshape = _spawn_on_segment_static_high(sand_wall, in_pos)
+		"Z": tempshape = _spawn_on_segment_static_high(sand_wall2, in_pos)
+		"c": tempshape = _spawn_on_segment_static_high(leaf_wall, in_pos)
+		"C": tempshape = _spawn_on_segment_static_high(leaf_wall2, in_pos)
+		"v": tempshape = _spawn_on_segment_static_high(leaf_wall3, in_pos)
+		"V": tempshape = _spawn_on_segment_static_high(leaf_wall4, in_pos)
+		"n": tempshape = _spawn_on_segment_static_high(sea_wall, in_pos)
+		"N": tempshape = _spawn_on_segment_static_high(sea_wall2, in_pos)
+		"M": tempshape = _spawn_on_segment_static_high(block_mountain, in_pos)
+		"k": tempshape = _spawn_on_segment_static_high(block_sand, in_pos)
+		"K": tempshape = _spawn_on_segment_static_high(block_sand2, in_pos)
+		"h": tempshape = _spawn_on_segment_static_high(block_sand3, in_pos)
+		"J": tempshape = _spawn_on_segment_static_high(block_tree1, in_pos)
+		"j": tempshape = _spawn_on_segment_static_high(block_tree2, in_pos)
+		"H": tempshape = _spawn_on_segment_static_high(block_tree3, in_pos)
+		"d": tempshape = _spawn_on_segment_static_high(block_sea1, in_pos)
+		"D": tempshape = _spawn_on_segment_static_high(block_sea2, in_pos)
+		"a": tempshape = _spawn_on_segment_static_high(block_lava1, in_pos)
+		"A": tempshape = _spawn_on_segment_static_high(block_lava2, in_pos)
+		"Q": tempshape = _spawn_on_segment_static_high(block_lava3, in_pos)
+		"W": tempshape = _spawn_on_segment_static_high(block_wood1, in_pos)
+		"w": tempshape = _spawn_on_segment_static_high(block_wood2, in_pos)
+		"+": tempshape = _spawn_on_segment_static_high(block_barrier, in_pos)
+
+
+
+# 背景实体
+		"@":
+			# 背景熔岩 1（无碰撞）
+			tempshape = Background_lava.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-			node_type = "gem"
-		"y":  # 黄色宝石
-			tempshape = yellow_gem.instantiate()
+			node_type = "background"
+		"$":
+			# 背景熔岩 2（无碰撞）
+			tempshape = Background_lava2.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-			node_type = "gem"
-		"l":  # 蓝色宝石
-			tempshape = blue_gem.instantiate()
+			node_type = "background"
+		"%":
+			# 背景沙地（无碰撞）
+			tempshape = Background_sand.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-			node_type = "gem"
-		"p":  # 彩色宝石
-			tempshape = rainbow_gem.instantiate()
+			node_type = "background"
+		"&":
+			# 背景海洋（无碰撞）
+			tempshape = Background_sea.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-			node_type = "gem"
-		"g":  # 绿色宝石
-			tempshape = green_gem.instantiate()
+			node_type = "background"
+		"q":
+			# 背景木材（无碰撞）
+			tempshape = Background_wood.instantiate()
 			tempshape.global_position = in_pos
 			_static_parent().add_child(tempshape)
-			node_type = "gem"
-		"O":
-			# 熔岩墙体方块（静态）
-			tempshape = lava_wall.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"z":
-			# 沙墙体方块（静态）
-			tempshape = sand_wall.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"Z":
-			# 沙墙体方块2（静态）
-			tempshape = sand_wall2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"c":
-			# 叶墙体方块1（静态）
-			tempshape = leaf_wall.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"C":
-			# 叶墙体方块2（静态）
-			tempshape = leaf_wall2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"v":
-			# 叶墙体方块3（静态）
-			tempshape = leaf_wall3.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"V":
-			# 叶墙体方块4（静态）
-			tempshape = leaf_wall4.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"n":
-			# 海墙体方块1（静态）
-			tempshape = sea_wall.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"N":
-			# 海墙体方块2（静态）
-			tempshape = sea_wall2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"M":
-			# 山体装饰（不带碰撞）
-			tempshape = block_mountain.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "decor"
-		"k":
-			# 沙子装饰 1（带碰撞）
-			tempshape = block_sand.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"K":
-			# 沙子装饰 2（带碰撞）
-			tempshape = block_sand2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"h":
-			# 沙子装饰 3（带碰撞）
-			tempshape = block_sand3.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"		
-		"J":
-			# 树木装饰 1（带碰撞）
-			tempshape = block_tree1.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"j":
-			# 树木装饰 2（带碰撞）
-			tempshape = block_tree2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"H":
-			# 树木装饰 3（带碰撞）	
-			tempshape = block_tree3.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"d":
-			# 海洋装饰 1（带碰撞）
-			tempshape = block_sea1.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"D":
-			# 海洋装饰 2（带碰撞）		
-			tempshape = block_sea2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"a":
-			# 熔岩装饰 1（带碰撞）
-			tempshape = block_lava1.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"A":
-			# 熔岩装饰 2（带碰撞）
-			tempshape = block_lava2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"
-		"Q":
-			# 熔岩装饰 3（带碰撞）
-			tempshape = block_lava3.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"	
-		"W":
-			# 木头装饰 1（带碰撞）
-			tempshape = block_wood1.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"	
-		"w":
-			# 木头装饰 2（带碰撞）
-			tempshape = block_wood2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
-			node_type = "block"	
+			node_type = "background"
 
 # 狗儿～
 		"G":
