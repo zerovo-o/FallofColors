@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://rainbow_gem_scene"]
+[gd_scene load_steps=6 format=3 uid="uid://bpbhipqp1g662"]
 
-[ext_resource type="Script" path="res://Scripts/colorGem/rainbow_gem.gd" id="1_mqy1f"]
+[ext_resource type="Script" uid="uid://c2jvowmw8h07d" path="res://Scripts/colorGem/rainbow_gem.gd" id="1_mqy1f"]
 [ext_resource type="Texture2D" uid="uid://dpnae28nc0l3c" path="res://Art/Enemyies/Coin.png" id="2_xhuh2"]
 
 [sub_resource type="Animation" id="Animation_j1hvg"]
@@ -22,30 +22,33 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q3rl5"]
 _data = {
-"coinspin": SubResource("Animation_j1hvg")
+&"coinspin": SubResource("Animation_j1hvg")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_675af"]
 
 [node name="RainbowGem" type="Node2D"]
 script = ExtResource("1_mqy1f")
+rainbow_cycle_period = 10.0
+rainbow_saturation = 0.6
+rainbow_lightness = 0.5
+overlay_alpha = 0.3
+overlay_duration = 4.0
+overlay_fade_sec = 1.0
 
 [node name="Glow" type="Sprite2D" parent="."]
-position = Vector2(0, 0)
-texture = ExtResource("2_xhuh2")
-hframes = 3
 modulate = Color(1, 1, 1, 0.7)
 scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_xhuh2")
+hframes = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_xhuh2")
 hframes = 3
-modulate = Color(1, 1, 1, 1)  // 白色，不透明
-scale = Vector2(1.2, 1.2)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_q3rl5")
+&"": SubResource("AnimationLibrary_q3rl5")
 }
 
 [node name="Area2D" type="Area2D" parent="."]
