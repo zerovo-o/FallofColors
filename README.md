@@ -1,7 +1,10 @@
 # FallofColors
 会赢的对不队
+
 组长：黄心怡
+
 组员：曹黎悦、李垣毅、冉源潮、孙翌、熊子稼
+
 &emsp;&emsp;项目共享文件夹为https://rcnpwnxsb3tv.feishu.cn/drive/folder/JBASfX49Hl5xaQdlUVVcXAOBn8e?from=from_copylink
 ，里面包含了项目进度、设计主文档、周会报告等各类文档。
 
