@@ -28,11 +28,11 @@ zxx4xxxx5xxxx6xxz
 zxxxxxxxxxxxxxxxz
 zxxxxxxxxxxxxxxxz
 =
-xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-|||||xxxx||xxxxxx
+|||xxxxxxxxxxxxxx
+|||||||xxxxxxx|||
+|||||xxxx||xxxx||
 |xx||||||xx||xx||
-xxxx||xxxxx||||||
+|xxx||xxxxx||||||
 =
 xxxx|||xxxx||xxxx
 x|||xxx||||xx||||

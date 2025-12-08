@@ -53,8 +53,8 @@ xxxx|||||||||||xx
 |||||||||||||||||
 =
 x^^xx.......xx^^O
-xx12345612356111O
-x123461234561231O
+xxxxxxxxxxxxxxxxO
+xxxxxxxxxxxxxxxxO
 x...............O
 xxx1xxxx2xxxx3xxO
 =

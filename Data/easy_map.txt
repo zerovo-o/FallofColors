@@ -28,9 +28,9 @@
 |xxxxxxxxxxxxxxx|
 |xxxxxxxxxxxxxxx|
 =
-xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-|||||xxxx||xxxxxx
+||xxxxxxxxxxxxxxx
+||||xxxxxxxxx|||x
+|||||xxxx||xx||||
 |xx||||||xx||xxxx
 xxxx||xxxxx||||||
 =
@@ -53,8 +53,8 @@ ox||xxx||||||||||
 |||||||||||||||||
 =
 x^^xx.......xx^^|
-xx12345612356111|
-x123461234561231|
+xxxxxxxxxxxxxxxx|
+xxxxxxxxxxxxxxxx|
 x...............|
 xxx1xxxx2xxxx3xx|
 =

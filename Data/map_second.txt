@@ -28,9 +28,9 @@ Vxx4xxxx5xxxx6xxV
 VxxxxxxxxxxxxxxxV
 VxxxxxxxxxxxxxxxV
 =
-xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx
-|||||xxxxxxxxxxxx
+||xxxxxxxxxxxxxxx
+||||xxxxxxxxxx|||
+|||||xxxxxxxx|||x
 |||||||||xx||||||
 xxxx||xxx||||||||
 =
@@ -53,8 +53,8 @@ xxxx|||||||||||xx
 |||||||||||||||||
 =
 x^^xx.......xx^^V
-xx12345612356111V
-x123461234161231V
+xxxxxxxxxxxxxxxxV
+xxxxxxxxxxxxxxxxV
 x...............V
 xxx1xxxx2xxxx3xxV
 =
@@ -132,7 +132,7 @@ Vxxxxxx..xxxxxxxV
 =
 Cxx4xxxx5xxxx6xxC
 Cxx..x..x.x.xxxxC
-V^^xxjxxxxxHXx^^V
+V^^xxjxxxxxHxx^^V
 Vxxx___xxxx___xxV
 VxxxxxxxxxxxxxxxV
 =
