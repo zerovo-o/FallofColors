@@ -208,7 +208,7 @@ script = ExtResource("10_a4k58")
 
 [node name="OpeningHatch" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(112, -128)
+position = Vector2(128, -128)
 texture = ExtResource("11_kbrbr")
 
 [connection signal="focus_entered" from="StartGameUI/Panel/MarginContainer/VBoxContainer/StartButton" to="StartGameUI" method="_on_start_button_focus_entered"]
