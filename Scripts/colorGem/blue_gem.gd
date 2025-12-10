@@ -308,10 +308,10 @@ func apply_persistent_blue_effect():
 	if blue_modulate == null:
 		blue_modulate = CanvasModulate.new()
 		blue_modulate.name = "BlueModulate"
-		blue_modulate.color = Color(0.344, 0.777, 0.992, 0.867)  # 蓝色调
+		blue_modulate.color = Color(0.7, 0.7, 1.0, 1.0)  # 蓝色调
 		root.add_child(blue_modulate)
 	else:
-		blue_modulate.color = Color(0.169, 0.82, 0.937, 0.686)
+		blue_modulate.color = Color(0.7, 0.7, 1.0, 1.0)
 
 # 移除其他调制效果
 func remove_other_modulates():
@@ -341,7 +341,7 @@ func play_fullscreen_blue_effect():
 		
 	# 创建一个全屏的蓝色调效果
 	var blue_overlay = ColorRect.new()
-	blue_overlay.color = Color(0.137, 0.635, 0.969, 0.843)  # 蓝色调，高透明度
+	blue_overlay.color = Color(0.7, 0.7, 1.0, 0.9)  # 蓝色调，高透明度
 	blue_overlay.anchor_right = 1
 	blue_overlay.anchor_bottom = 1
 	blue_overlay.z_index = 100  # 确保在最上层

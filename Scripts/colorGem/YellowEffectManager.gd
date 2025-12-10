@@ -7,9 +7,9 @@ var warm_effect_active = false
 var warm_modulate: CanvasModulate = null
 
 # 不同类型的节点颜色调整
-const BACKGROUND_WARM = Color(1.011, 0.958, 0.0, 0.714) 
-const BLOCK_WARM = Color(0.975, 0.975, 0.0, 0.753)
-const ENEMY_WARM = Color(0.888, 0.884, 0.0, 0.91) 
+const BACKGROUND_WARM = Color(1.011, 0.9, 0.0, 1.0) 
+const BLOCK_WARM = Color(1.0, 0.871, 0.0, 0.882)
+const ENEMY_WARM = Color(1.0, 0.835, 0.0, 0.91) 
 
 func _ready():
 	# 初始化为默认状态
