@@ -1,0 +1,87 @@
+[gd_scene load_steps=13 format=3 uid="uid://cajsqyi3x3pf1"]
+
+[ext_resource type="Script" uid="uid://nmrq5lvrfmcl" path="res://Scripts/lavabat.gd" id="1_8yt1s"]
+[ext_resource type="Shader" uid="uid://dxdcivuwo5e2r" path="res://Scenes/life_flash.gdshader" id="2_vtbg5"]
+[ext_resource type="Texture2D" uid="uid://bfuaggg63h2mo" path="res://Art/Enemyies/lavabat.png" id="3_8yt1s"]
+[ext_resource type="PackedScene" uid="uid://cc2bw6mmhabwl" path="res://Scenes/Enemy/bounce_area_2d.tscn" id="3_m3w34"]
+[ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="3_t7h3h"]
+[ext_resource type="Script" uid="uid://bb8q026uhjhhu" path="res://Scripts/spriteshadercontroller.gd" id="4_712e7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oavjf"]
+size = Vector2(8, 3.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vpgn3"]
+shader = ExtResource("2_vtbg5")
+shader_parameter/active = false
+shader_parameter/Strength = 5.0
+shader_parameter/RandomOffset = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_24dty"]
+size = Vector2(9.125, 3.125)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0cww7"]
+size = Vector2(8, 2.4375)
+
+[sub_resource type="Animation" id="Animation_n2ka8"]
+resource_name = "drone"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_waq3i"]
+_data = {
+&"drone": SubResource("Animation_n2ka8")
+}
+
+[node name="lavabat" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_8yt1s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_oavjf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_vpgn3")
+position = Vector2(1, 2)
+scale = Vector2(0.44204545, 0.5274039)
+texture = ExtResource("3_8yt1s")
+vframes = 5
+script = ExtResource("4_712e7")
+
+[node name="BounceArea2D" parent="." instance=ExtResource("3_m3w34")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_24dty")
+
+[node name="HurtArea2D" parent="." instance=ExtResource("3_t7h3h")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtArea2D"]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_0cww7")
+
+[node name="leftRay" type="RayCast2D" parent="."]
+target_position = Vector2(-6, 0)
+
+[node name="rightRay" type="RayCast2D" parent="."]
+target_position = Vector2(7, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_waq3i")
+}
+autoplay = "drone"
+speed_scale = 2.481
+
+[connection signal="area_entered" from="BounceArea2D" to="." method="_on_bounce_area_2d_area_entered"]

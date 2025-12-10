@@ -3,4 +3,3 @@ extends StaticBody2D
 
 func _ready():
 	sprite.frame = randi_range(1,sprite.get_hframes()-1 )
-

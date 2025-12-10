@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://mpev0os6rina"]
 
-[ext_resource type="Script" path="res://Scenes/Blocks/choose_random_sprite.gd" id="1_878u1"]
+[ext_resource type="Script" uid="uid://dtbs8btq8rfpp" path="res://Scenes/Blocks/choose_random_sprite.gd" id="1_878u1"]
 [ext_resource type="Texture2D" uid="uid://cciyyf752ofve" path="res://Art/Blocks/metal-wall-block-sheet.png" id="1_voawj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t0jup"]
