@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name PlayerMasterAndMover
 
 signal calculate_bonus(amount)
-@onready var jumpmove : JumpAndMove = $JumpAndMove
+@onready var jumpmove : JumpAndMove2 = $JumpAndMove
 @onready var bulletspawn : BulletSpawner = $BulletSpawner
 @onready var UI : MainUI = $CanvasLayer/MainUI
 @onready var sprite : Sprite2D = $Sprite2D
@@ -25,7 +25,8 @@ func apply_upgrade(upgrade : Upgrade):
 	HitStpo.start_hitstop(0.5)
 	match  upgrade.type:
 		Upgrade.UpgradeType.MORE_LIFE:
-			life_max += 2
+			if life_max < 12:
+				life_max += 1
 			set_life_current(life_max)
 		Upgrade.UpgradeType.MORE_BULLETS:
 			jumpmove.max_air_jump += 2
@@ -83,11 +84,3 @@ func start_game():
 func _physics_process(delta):
 	if global_position.y > camera_effect.global_position.y:
 		camera_effect.target = self
-	
-	if global_position. x < -20:
-		global_position.x = -20
-		velocity.x = 0
-	elif global_position.x > 245:
-		global_position.x = 245
-		velocity.x = 0
-		
