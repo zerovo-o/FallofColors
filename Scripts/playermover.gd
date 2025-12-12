@@ -25,7 +25,7 @@ func apply_upgrade(upgrade : Upgrade):
 	HitStpo.start_hitstop(0.5)
 	match  upgrade.type:
 		Upgrade.UpgradeType.MORE_LIFE:
-			if life_max < 12:
+			if life_max < 7:
 				life_max += 1
 			set_life_current(life_max)
 		Upgrade.UpgradeType.MORE_BULLETS:

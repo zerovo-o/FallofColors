@@ -1,4 +1,4 @@
-extends EnemyMain
+extends EnemyMain2
 
 @onready var sprite : spriteEffect = $Sprite2D
 

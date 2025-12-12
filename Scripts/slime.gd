@@ -1,4 +1,4 @@
-extends EnemyMain
+extends EnemyMain2
 
 enum State {IDLE, JUMP, JUMP_PREP, RELEASE_GAS}
 

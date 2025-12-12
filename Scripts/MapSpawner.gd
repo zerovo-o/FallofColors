@@ -351,40 +351,23 @@ func spawn_block(in_shape : String, in_pos : Vector2i ):
 		"W": tempshape = _spawn_on_segment_static_high(block_wood1, in_pos)
 		"w": tempshape = _spawn_on_segment_static_high(block_wood2, in_pos)
 		"+": tempshape = _spawn_on_segment_static_high(block_barrier, in_pos)
-
-
-
-# 背景实体
+		# 背景实体
 		"@":
-			# 背景熔岩 1（无碰撞）
-			tempshape = Background_lava.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
+			tempshape = _spawn_on_segment_static_high(Background_lava, in_pos)
 			node_type = "background"
 		"$":
-			# 背景熔岩 2（无碰撞）
-			tempshape = Background_lava2.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
+			tempshape = _spawn_on_segment_static_high(Background_lava2, in_pos)
 			node_type = "background"
 		"%":
-			# 背景沙地（无碰撞）
-			tempshape = Background_sand.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
+			tempshape = _spawn_on_segment_static_high(Background_sand, in_pos)
 			node_type = "background"
 		"&":
-			# 背景海洋（无碰撞）
-			tempshape = Background_sea.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
+			tempshape = _spawn_on_segment_static_high(Background_sea, in_pos)
 			node_type = "background"
 		"q":
-			# 背景木材（无碰撞）
-			tempshape = Background_wood.instantiate()
-			tempshape.global_position = in_pos
-			_static_parent().add_child(tempshape)
+			tempshape = _spawn_on_segment_static_high(Background_wood, in_pos)
 			node_type = "background"
+
 
 # 狗儿～
 		"G":
