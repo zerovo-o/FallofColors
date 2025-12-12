@@ -1,6 +1,6 @@
 [gd_scene load_steps=18 format=3 uid="uid://3ttmn1sswu3m"]
 
-[ext_resource type="Script" uid="uid://bfhgrjxiqb6pf" path="res://Scripts/slime.gd" id="1_pqdc7"]
+[ext_resource type="Script" uid="uid://danc0bhrwq4ql" path="res://Scripts/slime.gd" id="1_pqdc7"]
 [ext_resource type="PackedScene" uid="uid://b0og2rl10wb34" path="res://Scenes/Enemy/hurt_area_2d.tscn" id="2_l5hff"]
 [ext_resource type="Shader" uid="uid://dxdcivuwo5e2r" path="res://Scenes/life_flash.gdshader" id="3_32wwl"]
 [ext_resource type="Texture2D" uid="uid://cd8fy1dn36dth" path="res://Art/Enemyies/slime.png" id="4_pqdc7"]
@@ -135,7 +135,7 @@ libraries = {
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceArea2D"]
-position = Vector2(0, -1)
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_sb2af")
 
 [node name="SporeSpawnPoint" type="Node2D" parent="."]
