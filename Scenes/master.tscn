@@ -174,16 +174,16 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ba7eb")
 [node name="KeyHint" type="Label" parent="StartGameUI/Panel"]
 layout_mode = 0
 offset_left = 260.0
-offset_top = 145.0
+offset_top = 400.0
 offset_right = 170.0
-offset_bottom = 160.0
+offset_bottom = 415.0
 theme = ExtResource("5_ntukj")
 theme_override_fonts/font = SubResource("SystemFont_keyhint")
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 10
 theme_override_constants/outline_size = 1
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-text = "A : 向左移动\nD : 向右移动\n，: 跳跃/射击"
+text = "A: 向左移动    D: 向右移动    逗号: 跳跃/射击"
 
 [node name="MarginContainer" type="MarginContainer" parent="StartGameUI/Panel"]
 layout_mode = 0
